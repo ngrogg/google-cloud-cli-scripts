@@ -1,0 +1,34 @@
+#!/usr/bin/bash
+
+# Variables
+server=$1
+zone=$2
+project=$3
+
+# Help                                                                                 
+if [[ $1 == "help" || $1 == "Help" ]]; then                                                                                                    
+        echo "cloudssh server zone project"
+        exit                                                                                            
+fi
+
+# Checks 
+if [[-z $project ]]; then
+	gcloud projects list
+	echo -n "Please enter a PROJECT_ID to use: "
+	read project
+fi
+
+if [[-z $zone ]]; then
+	gcloud compute zones list
+	echo -n "Please enter a zone to use: "
+	read zone
+fi
+
+if [[-z $server ]]; then
+	echo -n "Please enter a server to search for: "
+	read server 
+fi
+
+# Run command
+gcloud beta compute ssh $server --zone $zone --project $project --tunnel-through-iap
+

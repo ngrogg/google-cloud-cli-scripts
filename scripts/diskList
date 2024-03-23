@@ -1,0 +1,103 @@
+#!/usr/bin/bash
+
+# Disk List
+# Script to list disks in a project and associated snapshot policies
+# By Nicholas Grogg
+
+# Help function
+function helpFunction(){
+	printf '%s\n' \
+	'Help' \
+	'----------------------------------------------------' \
+	' ' \
+	'help/Help' \
+	'* Display this help message and exit' \
+	' ' \
+	'list/List' \
+	'* List disks in project and associated snapshot policies' \
+	'* Takes a project as an argument' \
+	'Ex. ./diskList list project'
+}
+
+# Function to run program
+function runProgram(){
+	printf '%s\n' \
+	'Running Disk List' \
+	'----------------------------------------------------'
+
+	## Assign passed value to variable
+	project=$1
+
+	## Validation
+	### Is project null?
+	if [[ -z "$project" ]]; then
+		printf '%s\n' \
+		'ISSUE DETECTED - Project not passed' \
+		'----------------------------------------------------' \
+		'Enter a project value: '
+		read project
+	fi
+
+	### If project still null, exit
+	if [[ -z "$project" ]]; then
+		printf '%s\n' \
+		'ISSUE DETECTED - Project not passed' \
+		'----------------------------------------------------' \
+		'Exiting, re-run with valid input'
+		exit
+	fi
+
+	## Output project disks
+	printf '%s\n' \
+	'List of disks' \
+	'----------------------------------------------------'
+	if [[ -z $2 ]]; then
+		gcloud compute disks list --project $project
+
+	else
+		gcloud compute disks list --project $project | grep $2
+		exit
+
+	fi
+
+	## Output snapshot policies associated with disks
+	printf '%s\n' \
+	' ' \
+	'Snapshot policies for disks' \
+	'----------------------------------------------------'
+	gcloud compute disks list --project $project --format text | egrep 'name|resourcePolicies'
+}
+
+# Main, read passed flags
+	printf '%s\n' \
+	'Disk List ' \
+	'----------------------------------------------------' \
+	' ' \
+	'Checking flags passed' \
+	'----------------------------------------------------'
+
+# Check passed flags
+case "$1" in
+[Hh]elp)
+	printf '%s\n' \
+	'Running Help function' \
+	'----------------------------------------------------'
+	helpFunction
+	exit
+	;;
+[Ll]ist)
+	printf '%s\n' \
+	'Running script' \
+	'----------------------------------------------------'
+	runProgram $2 $3
+	;;
+*)
+	printf '%s\n' \
+	'ISSUE DETECTED - Invalid input detected!' \
+	'----------------------------------------------------' \
+	'Running help script and exiting.' \
+	'Re-run script with valid input'
+	helpFunction
+	exit
+	;;
+esac

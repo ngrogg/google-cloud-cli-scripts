@@ -1,0 +1,95 @@
+#!/usr/bin/bash
+
+# snapshotRemoval
+# BASH script to remove GCP snapshots over a week old
+# By Nicholas Grogg
+
+## Help function
+function helpFunction(){
+	printf '%s\n' \
+	'Help' \
+	'----------------------------------------------------' \
+	' ' \
+	'help/Help' \
+	'* Display this help message and exit' \
+	' ' \
+	'remove/Remove' \
+	'* List and remove old snapshots' \
+	'* Takes user initials as arguments' \
+	'Ex. ./snapshotRemoval remove ngg'
+}
+
+## Function to run program
+function runProgram(){
+	printf '%s\n' \
+	'Main' \
+	'----------------------------------------------------'
+
+	### Assign passed initials to variable
+	initials="$1"
+
+	### Date 1 week ago
+	weekAgo=`date --date="1 week ago" +%Y-%m-%d`
+
+	### Populate array with projects
+	projectArray=(`gcloud projects list | awk '{print $1}'`)
+
+	### Iterate through projects and remove snapshots
+	for project in "${projectArray[@]}"
+	do
+		echo "${project}: "
+		#### If no snapshots that meet criteria found
+		if [[ -z $(gcloud compute snapshots list --filter="creationTimestamp<'$weekAgo'" --project "${project}" | grep "${initials}-") ]]; then
+			echo "No snapshots meet criteria"
+
+		#### Else populate array and remove resulting snapshots
+		else
+			##### Populate Array with snapshots
+			snapshotArray=(`gcloud compute snapshots list --filter="creationTimestamp<'$weekAgo'" --project "${project}" | grep "${initials}-" | awk '{print $1}'`)
+			##### For loop to remove snapshots
+			for snapshot in "${snapshotArray[@]}"
+			do
+				###### Delete snapshot
+				gcloud compute snapshots delete --project "${project}" $snapshot --quiet
+			done
+		fi
+
+		#### Whitespace for readability
+		echo ""
+	done
+
+}
+
+## Main, read passed flags
+printf '%s\n' \
+'GCP Snapshot removal' \
+'----------------------------------------------------' \
+' ' \
+'Checking flags passed' \
+'----------------------------------------------------'
+
+## Check passed flags
+case "$1" in
+[Hh]elp)
+	printf '%s\n' \
+	'Running Help function' \
+	'----------------------------------------------------'
+	helpFunction
+	exit
+	;;
+[Rr]emove)
+	printf '%s\n' \
+	'Running script to remove snapshots' \
+	'----------------------------------------------------'
+	runProgram $2
+	;;
+*)
+	printf '%s\n' \
+	'ISSUE DETECTED - Invalid input detected!' \
+	'----------------------------------------------------' \
+	'Running help script and exiting.' \
+	'Re-run script with valid input'
+	helpFunction
+	exit
+	;;
+esac

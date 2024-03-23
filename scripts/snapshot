@@ -1,0 +1,171 @@
+#!/usr/bin/bash
+
+# Bash script designed to take snapshots of GCP instances
+# I highly recommend adding an alias to your rc file
+# Alternatively, set up a ~/bin folder and put it there
+
+# Bash flag variables for the server, why it's being snapshotted, initials of the sysadmin, and the project
+server=$1
+purpose=$2
+initials=$3
+project=$4
+
+# Optional value to skip value confirmation, it's use is not recommended
+proceed=$5
+
+# Help
+if [[ $1 == "help" || $1 == "Help" ]]
+then
+	echo "Usage: snapshot server reason initials project"
+	echo "ex. snapshot myServer php ngg myProject"
+	echo "Provide a fifth value to skip value check. Can be anything, use at own risk"
+	echo "ex. snapshot server myServer ngg myProject proceed"
+	exit 0
+fi
+
+# Input checks
+## Check if server was passed, prompt for a server
+if [ -z $server ]
+then
+	 read -p "Provide a server hostname, ex. myServer : " server
+fi
+
+## Why are you taking the snapshot?
+if [ -z $purpose ]
+then
+	read -p "Provide a snapshot reason, ex. php : " purpose
+fi
+
+## Initials of whoever is taking the snapshot
+if [ -z $initials ]
+then
+	read -p "Please enter initials, ex. ngg : " initials
+fi
+
+## What project?
+if [ -z $project ]
+then
+	gcloud projects list
+	read -p "Please enter the project to use from the list above, ex. myProject : " project
+fi
+
+## Fail state
+if [ -z $server ] || [ -z $purpose ] || [ -z $initials ] || [ -z $project ]
+then
+	echo "A required value is missing!"
+	echo "Usage: ./snapshot server reason initials project"
+	echo "ex. snapshot myServer php ngg myProject"
+	echo "Provide a fifth value to skip value check, use at own risk"
+	echo "ex. snapshot myServer php ngg myProject proceed"
+	exit 1
+fi
+
+# Value confirmation
+## If proceed variable provided don't confirm values, use option at own risk!
+if [ -z $proceed ]
+then
+	echo "Value confirmation before proceeding"
+	echo "Server:   $1"
+	echo "Reason:   $2"
+	echo "Sysadmin: $3"
+	echo "Project:  $4"
+	read -p "Press enter to proceed or ctrl-c to cancel : " junkInput
+fi
+
+# Take snapshot
+## Find server zone
+serverZone=$(gcloud compute instances list --project $project | grep $server | awk '{print $2}'| head -n 1)
+
+## Find server disk
+diskName=$(gcloud compute disks list --project $project | grep $server | awk '{print $1}' | head -n 1)
+
+## Take snapshot
+gcloud compute disks snapshot $diskName --snapshot-names=$initials-$diskName-$purpose-$(date +"%Y%m%d") --storage-location=us --zone $serverZone --project $project
+
+## Was snapshot taken successfully?
+if [ $? = 0 ]
+then
+	echo "Snapshot taken"
+else
+	echo "ERROR!"
+        echo "Something went wrong!"
+	echo " "
+        exit 1
+fi
+
+# Snapshot validation
+## Validate snapshot source disk
+echo "Validating snapshot created from attached server boot disk"
+
+### Get snapshot name
+snapshotName="$initials-$diskName-$purpose-$(date +"%Y%m%d")"
+
+### Get boot disk name of instance
+serverBootDisk=$(gcloud compute instances describe $server --project $project --zone $serverZone | grep 'boot: true' -C 3 | grep "deviceName" | awk '{print $2}')
+
+### Check for snapshots for boot disk, look for snapshot name
+snapshotDiskCheck=$(gcloud compute snapshots list --project $project | grep $serverBootDisk | grep ^"$snapshotName" | awk '{print $1}')
+
+### Did command execute successfully?
+if [ $? != 0 ]
+then
+	echo "ERROR!"
+	echo "gcloud command failed to execute!"
+	echo " "
+	exit 1
+fi
+
+### Get boot disk source
+serverDiskSource=$(gcloud compute instances describe $server --project $project --zone $serverZone | grep 'boot: true' -C 22 | grep 'source' | awk '{print $2}' | sed 's:.*/::')
+
+### Did command execute successfully?
+if [ $? != 0 ]
+then
+	echo "ERROR!"
+	echo "gcloud command failed to execute!"
+	echo " "
+	exit 1
+fi
+
+### Check for snapshots for source disk, look for snapshot name
+snapshotSourceCheck=$(gcloud compute snapshots list --project $project | grep $serverDiskSource | grep ^"$snapshotName" | awk '{print $1}')
+
+### Was snapshot name found?
+if [ "$snapshotName" != "$snapshotDiskCheck" ] && [ "$snapshotName" != "$snapshotSourceCheck" ]
+then
+	echo "ERROR!"
+        echo "Created snapshot was not taken from boot disk in use by server!"
+	echo "Review for correct disk and take snapshot manually if needed"
+	echo " "
+        exit 1
+else
+        echo "Verified snapshot was taken from current disk!"
+fi
+
+## Validate snapshot size
+echo "Validating snapshot size"
+
+### Get size of snapshot
+snapshotSize=$(gcloud compute snapshots describe $snapshotName --project $project | grep storageBytes: | awk '{print $2}')
+
+### Did command execute successfully?
+if [ $? != 0 ]
+then
+	echo "ERROR!"
+	echo "gcloud command failed to execute!"
+	echo " "
+	exit 1
+fi
+
+### Is snapshot empty at 0 B?
+if [ "$snapshotSize" == "'0'" ]
+then
+	echo "ERROR!"
+	echo "Snapshot size is 0 B, do not proceed with current work effort!"
+	echo " "
+	exit 1
+else
+	echo "Snapshot size > 0 B, proceed with work effort!"
+	echo " "
+	exit 0
+fi

@@ -1,0 +1,75 @@
+#!/usr/bin/bash
+
+# A GCP BASH script to stop/start a server.
+# Takes a hostname, project and zond as arguments
+# By Nicholas Grogg
+
+# Help function
+function helpFunction(){
+	echo "Help"
+	echo "-----------------------------------------------"
+	echo "gcpRestart server zone project"
+	exit
+}
+
+# Function to run program
+function runProgram(){
+	# Assign flags to values
+	server=$1
+	zone=$2
+	project=$3
+
+	# Checks
+	# Check if server empty
+	if [ -z $server ]
+	then
+		read -p "What server is to be rebooted? : " server
+	fi
+
+	# Check if zone empty
+	if [ -z $zone ]
+	then
+		read -p "What zone is the server in? : " zone
+	fi
+
+	# Check if project empty
+	if [ -z $project ]
+	then
+		read -p "What project is the server in? : " project
+	fi
+
+	# Final check, bail if empty
+	if [[ -z $server || -z $zone || -z $project ]]; then
+		echo "One or more variables empty, run again!"
+		exit
+	fi
+
+	# Stop/Start servers
+	gcloud compute instances stop $server --zone $zone --project $project
+	gcloud compute instances start $server --zone $zone --project $project
+}
+
+# Main, parse passed values
+echo "GCP Restarter"
+echo "-----------------------------------------------"
+echo ""
+echo "Checking flags passed"
+echo "-----------------------------------------------"
+echo ""
+
+## Check passed values
+case "$1" in
+[Hh]elp)
+	echo "Running Help function"
+	echo "-----------------------------------------------"
+	echo ""
+	helpFunction
+	exit
+	;;
+*)
+	echo "Running GCP Restarter"
+	echo "-----------------------------------------------"
+	echo ""
+	runProgram $1 $2 $3
+	;;
+esac
