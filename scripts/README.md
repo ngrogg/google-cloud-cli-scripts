@@ -17,6 +17,8 @@ argument. Useful in cases where a disk has an unusual name, such as from a snaps
 * **gcpRestart**, a BASH script for restarting a server. <br>
   Takes a hostname, zone and project as arguments <br>
   Usage, `gcpRestart hostname zone project` <br>
+* **generateHosts**, A BASH script for generating a host file using GCP servers. <br>
+  Usage, just run the script. <br>
 * **kbConnect**, a BASH script for connecting or listing Kubernetes Pods in GCP <br>
   To list all pods in a project pass the 'pods' argument. Can also look for
   a specific pod by passing part of it's alias.<br>
