@@ -10,3 +10,6 @@ BASH scripts for listing servers matching criteria in GCP. Useful for upgrade pr
   Ex. `./databaseTechList.sh list mysql 8` <br>
   Also has a populate command for generating new server lists to check. <br>
   Usage. `./databaseTechList.sh populate` <br>
+* **phpList**, A BASH script for list Welshes, Stantzes and Image servers alongside their PHP versions. Takes a PHP version as an argument. <br>
+  Usage. `./phpList.sh PHP_VERSION` <br>
+  Ex. `./phpList.sh 8.1` <br>
