@@ -13,3 +13,4 @@ BASH scripts for listing servers matching criteria in GCP. Useful for upgrade pr
 * **phpList**, A BASH script for list Welshes, Stantzes and Image servers alongside their PHP versions. Takes a PHP version as an argument. <br>
   Usage. `./phpList.sh PHP_VERSION` <br>
   Ex. `./phpList.sh 8.1` <br>
+* **ubuntuList**, A BASH script for listing Ubuntu servers in GCP.

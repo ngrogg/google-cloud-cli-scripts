@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
-# CentOS List
-# BASH script for listing CentOS servers in GCP
+# Ubuntu List
+# BASH script for listing Ubuntu servers in GCP
 # By Nicholas Grogg
 
 # Color variables
@@ -20,10 +20,10 @@ function helpFunction(){
 	"* Display this help message and exit" \
 	" " \
 	"list/List" \
-	"* CentOS List " \
-	"* List CentOS servers in GCP " \
+	"* Ubuntu List " \
+	"* List Ubuntu servers in GCP " \
 	"* No arguments, just run the script " \
-	"Ex. ./centosList.sh list"
+	"Ex. ./ubuntuList.sh list"
 }
 
 # Function to run program
@@ -36,31 +36,21 @@ function runProgram(){
     projectArray=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
 
     ## Create/truncate csv file
-    echo "Hostname,IP" > centosList.csv
+    echo "Hostname,IP" > ubuntuList.csv
 
     ## Iterate through projects
     for project in "${projectArray[@]}"
     do
 
-            ### List disks with CentOS property
-            gcloud compute instances list --project="${project}" --format="table(name,networkInterfaces[].networkIP,disks[].licenses)" --filter="disks[].licenses:(centos)" | grep "centos-7" | grep -v "balanced" | awk '{print $1 "," $2}' >> centosList.csv
+            ### List disks with Ubuntu property, you may need to adjust the grep -E filter for your own needs
+            gcloud compute instances list --project="${project}" --format="table(name,networkInterfaces[].networkIP,disks[].licenses)" --filter="disks[].licenses:(ubuntu)" | grep -E "ubuntu-16|ubuntu-18|ubuntu-20" | grep -v "balanced" | awk '{print $1 "," $2}' >> ubuntuList.csv
     done
-
-    # Uncomment if you have specific server naming conventions for different server types and need that granularity
-    ### Create spreadsheets for server types by picking them out of the master list
-    #for i in TYPE TYPE TYPE; do
-    #        ### Create/truncate csv file
-    #        echo "Hostname,IP" > centosList-$i.csv
-
-    #        ### Append list of servers
-    #        grep $i centosList.csv >> centosList-$i.csv
-    #done
 
 }
 
 # Main, read passed flags
 	printf "%s\n" \
-	"CentOS List" \
+	"Ubuntu List" \
 	"----------------------------------------------------" \
 	" " \
 	"Checking flags passed" \
