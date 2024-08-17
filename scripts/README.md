@@ -33,6 +33,7 @@ argument. Useful in cases where a disk has an unusual name, such as from a snaps
   Passing the connect argument without passing an alias will list all the pod aliases. Copy/Paste the alias to connect from list.<br>
   Usage, `./kbConnect connect` <br>
   Usage, `./kbConnect connect pod` <br>
+* **listScripts**, BASH scripts for listing servers w/ specific attributes <br>
 * **projectlist**, A BASH script for listing all servers in a GCP project. <br>
   Takes a project as an argument. Can match partials. <br>
   Usage, `projectlist project`<br>
