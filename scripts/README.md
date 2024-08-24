@@ -11,6 +11,8 @@ All scripts have a built in help function, just pass `help` as an argument. <br>
 * **consolelog**, List output from the GCP Console Log for a server.
   Takes an action, hostname, zone and project as an argument. <br>
   Usage, `consolelog log hostname zone project` <br>
+* **detachedDisk**, A BASH script for listing disks without servers. Iterates through all projects with Google Cloud SDK API active. <br>
+  Usage, `./detachedDisk list` <br>
 * **diskList**, A BASH script for finding a disk in a project. Takes a server and project as an
 argument. Useful in cases where a disk has an unusual name, such as from a snapshot restoration. <br>
   Usage, `./diskList hostname project` <br>
