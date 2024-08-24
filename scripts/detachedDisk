@@ -1,4 +1,4 @@
-!/usr/bin/bash
+#!/usr/bin/bash
 
 # Detached Disk
 # BASH script to iterate through projects and list all disks that aren't attached to anything
@@ -38,10 +38,10 @@ function runProgram(){
 	"List" \
 	"----------------------------------------------------"
 
-  printf "%s\n" \
-	"Getting list of projects "\
-	"----------------------------------------------------" \
-  " "
+    printf "%s\n" \
+    "Getting list of projects "\
+    "----------------------------------------------------" \
+    " "
 
   ## Array of projects, append project names/IDs to exclude as needed for your own uses
   projectArray=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
@@ -51,7 +51,7 @@ function runProgram(){
   do
   	    printf "%s\n" \
         "Project: " "$project" \
-	      "----------------------------------------------------" \
+        "----------------------------------------------------" \
         " "
 
         ### List all disks in the project
@@ -61,8 +61,8 @@ function runProgram(){
         echo "$disks" | while read -r name zone users; do
             if [[ -z "$users" && ! -z "$name" ]]; then
    	            printf "%s\n" \
-                "Disk: " "$name" \
-                "Zone: " "$zone" \
+                "${yellow}Disk: " "$name" \
+                "Zone: " "$zone${normal}" \
                 " "
             fi
         done
@@ -88,8 +88,8 @@ case "$1" in
 	;;
 [Ll]ist)
 	printf "%s\n" \
-	"Running script" \
-	"----------------------------------------------------"
+	"${green}Running script" \
+	"----------------------------------------------------${normal}"
 	runProgram
 	;;
 *)
