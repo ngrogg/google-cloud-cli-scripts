@@ -1,0 +1,146 @@
+#!/usr/bin/bash
+
+# Create GCP Image
+# BASH script to create an image from a GCP disk
+# By Nicholas Grogg
+
+# Color variables
+## Errors
+red=$(tput setaf 1)
+## Clear checks
+green=$(tput setaf 2)
+## User input required
+yellow=$(tput setaf 3)
+## Set text back to standard terminal font
+normal=$(tput sgr0)
+
+
+# Help function
+function helpFunction(){
+	printf "%s\n" \
+	"Help" \
+	"----------------------------------------------------" \
+	" " \
+	"help/Help" \
+	"* Display this help message and exit" \
+	" " \
+	"create/Create" \
+	"* Create Image from a GCP disk " \
+	"* Takes an image name, disk name, zone and project as arguments " \
+	"* Server should be powered off to create image" \
+	"Ex. ./createGcpImage.sh create IMAGE_NAME DISK_NAME ZONE PROJECT"
+}
+
+# Function to run program
+function runProgram(){
+	printf "%s\n" \
+	"Create" \
+	"----------------------------------------------------"
+
+    ## Validation
+    ### Values to variables
+    imageName=$1
+    sourceDisk=$2
+    sourceZone=$3
+    projectName=$4
+
+    ### Does project exist?
+	printf "%s\n" \
+    "Validation: Does project exist?" \
+	"----------------------------------------------------"
+
+    ### If project exists
+    if [[ $(gcloud projects list | grep $projectName) ]]; then
+        printf "%s\n" \
+        "${green}Project exists"\
+        "----------------------------------------------------" \
+        "Proceeding${normal}" \
+        " "
+    ### Else exit with error
+    else
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Project not found!"\
+        "----------------------------------------------------" \
+        "Double check values and re-run script${normal}"
+        exit 1
+    fi
+
+    ### Does disk exist in project?
+	printf "%s\n" \
+    "Validation: Does disk exist in project?" \
+	"----------------------------------------------------"
+
+    ### If disk exists
+    if [[ $(gcloud compute disks list --project $projectName | grep $sourceDisk) ]]; then
+        printf "%s\n" \
+        "${green}Disk exists"\
+        "----------------------------------------------------" \
+        "Proceeding${normal}" \
+        " "
+    ### Else exit with error
+    else
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Disk not found! "\
+        "----------------------------------------------------" \
+        "Double check values and re-run script${normal}"
+        exit 1
+    fi
+
+    ## Value Confirmation
+    printf "%s\n" \
+    "${yellow}IMPORTANT: Value Confirmation" \
+    "----------------------------------------------------" \
+    "Image to create: " "$imageName" \
+    "" \
+    "Source Disk: " "$sourceDisk" \
+    "" \
+    "Source Disk Zone: " "$sourceZone" \
+    "" \
+    "Project: " "$projectName" \
+    "" \
+    "Server should be powered off before creating image" \
+    "Script will fail if server is powered on" \
+    "" \
+    "If all clear, press enter to proceed or ctrl-c to cancel${normal}" \
+    ""
+
+    ### Last chance to bail
+    read junkInput
+
+    ## Create image
+    gcloud compute images create $imageName --source-disk $sourceDisk --source-disk-zone $sourceZone --project $projectName
+}
+
+# Main, read passed flags
+	printf "%s\n" \
+	"Create GCP Image" \
+	"----------------------------------------------------" \
+	" " \
+	"Checking flags passed" \
+	"----------------------------------------------------"
+
+# Check passed flags
+case "$1" in
+[Hh]elp)
+	printf "%s\n" \
+	"Running Help function" \
+	"----------------------------------------------------"
+	helpFunction
+	exit
+	;;
+[Cc]reate)
+	printf "%s\n" \
+	"Running script" \
+	"----------------------------------------------------"
+	runProgram $2 $3 $4 $5
+	;;
+*)
+	printf "%s\n" \
+	"${red}ISSUE DETECTED - Invalid input detected!" \
+	"----------------------------------------------------" \
+	"Running help script and exiting." \
+	"Re-run script with valid input${normal}"
+	helpFunction
+	exit
+	;;
+esac
