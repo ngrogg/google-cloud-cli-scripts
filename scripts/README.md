@@ -42,10 +42,16 @@ argument. Useful in cases where a disk has an unusual name, such as from a snaps
 * **projectlist**, A BASH script for listing all servers in a GCP project. <br>
   Takes a project as an argument. Can match partials. <br>
   Usage, `projectlist project`<br>
-* **snapshot**, A BASH script for taking a snapshot of a GCP server. Takes server name, reason for snapshot,
-  sysadmin initials, and project as arguments. <br>
-  Usage, `./snapshot hostname reason intials project` <br>
-  Ex. `./snapshot serverName wp ngg myProject` <br>
+* **snapshot**, A BASH script for taking a snapshot of a GCP server. <br>
+  Script can create standard or archive snapshots. Pass standard or archive as flags. <br>
+  Standard snapshots take server name, reason for snapshot, sysadmin initials, and project as arguments. <br>
+  Usage, `./snapshot standard hostname reason intials project` <br>
+  Ex. `./snapshot standard serverName wp ngg myProject` <br>
+  Archive snapshots take hostname reason for snapshot, and project as arguments. <br>
+  Server should be powered off for best result. <br>
+  Usage, `./snapshot archive hostname purpose project` <br>
+  Ex. `./snapshot archive serverName storage myProject` <br>
+  Depending on your project configuration the archive function may need expansion such as labels for customer names or unique properties for your needs. <br>
 * **snapshotRemoval**, a BASH script for removing snapshots over a week old. <br>
   Takes a run command and search criteria (like initials) as arguments <br>
   Usage, `./snapshotRemoval action criteria` <br>
