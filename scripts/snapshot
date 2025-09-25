@@ -17,32 +17,32 @@ normal=$(tput sgr0)
 
 # Help function
 function helpFunction(){
-	printf "%s\n" \
-	"Help" \
-	"----------------------------------------------------" \
-	" " \
-	"help/Help" \
-	"* Display this help message and exit" \
-	" " \
-	"standard/Standard" \
-	"* Creates a standard snapshot" \
-	"* Takes a hostname, purpose, intials and project as arguments" \
-	"Usage, snapshot hostname purpose initials project" \
-	"Ex. snapshot standard serverName wp ngg myProject" \
-	" " \
-	"archive/Archive" \
-	"Creates an archive snapshot" \
-	"Takes a hostname, purpose, and project as arguments" \
-	"Usage, snapshots hostname purpose project" \
-	"Ex. snapshot archive serverName storage myProject" \
-	" "
+    printf "%s\n" \
+    "Help" \
+    "----------------------------------------------------" \
+    " " \
+    "help/Help" \
+    "* Display this help message and exit" \
+    " " \
+    "standard/Standard" \
+    "* Creates a standard snapshot" \
+    "* Takes a hostname, purpose, intials and project as arguments" \
+    "Usage, snapshot hostname purpose initials project" \
+    "Ex. snapshot standard serverName wp ngg myProject" \
+    " " \
+    "archive/Archive" \
+    "Creates an archive snapshot" \
+    "Takes a hostname, purpose, and project as arguments" \
+    "Usage, snapshots hostname purpose project" \
+    "Ex. snapshot archive serverName storage myProject" \
+    " "
 }
 
 # Function to create a standard snapshot
 function createStandard(){
-	printf "%s\n" \
-	"Standard Snapshot" \
-	"----------------------------------------------------"
+    printf "%s\n" \
+    "Standard Snapshot" \
+    "----------------------------------------------------"
 
     ## Store passed values
     server=$1
@@ -52,19 +52,19 @@ function createStandard(){
 
     ## Variable validation
     if [[ -z $server ]] || [[ -z $purpose ]] || [[ -z $initials ]] || [[ -z $project ]]; then
-    	printf "%s\n" \
-    	"${red}ISSUE DETECTED - Variable missing " \
-    	"----------------------------------------------------" \
-    	"Running help function and exiting." \
-    	"Re-run script with valid input${normal}"
-    	helpFunction
-	    exit 1
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Variable missing " \
+        "----------------------------------------------------" \
+        "Running help function and exiting." \
+        "Re-run script with valid input${normal}"
+        helpFunction
+        exit 1
     fi
 
     ## Confirmation
-	printf "%s\n" \
-	"${yellow}IMPORTANT: Value Confirmation" \
-	"----------------------------------------------------" \
+    printf "%s\n" \
+    "${yellow}IMPORTANT: Value Confirmation" \
+    "----------------------------------------------------" \
     "Snapshot Type:" \
     "Standard" \
     "" \
@@ -76,7 +76,7 @@ function createStandard(){
     "" \
     "Project: "  "$project" \
     "" \
-	"If all clear, press enter to proceed or ctrl-c to cancel${normal}"
+    "If all clear, press enter to proceed or ctrl-c to cancel${normal}"
 
     read junkInput
 
@@ -93,22 +93,22 @@ function createStandard(){
 
     ### Was snapshot taken successfully?
     if [[ $? = 0 ]]; then
-	    printf "%s\n" \
-	    "${green}Snapshot taken " \
-	    "----------------------------------------------------" \
-	    "Proceeding to validation ${normal}"
+        printf "%s\n" \
+        "${green}Snapshot taken " \
+        "----------------------------------------------------" \
+        "Proceeding to validation ${normal}"
     else
-	    printf "%s\n" \
-	    "${red}ISSUE DETECTED - Something went wrong!" \
-	    "----------------------------------------------------" \
-	    "Exiting! ${normal}"
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Something went wrong!" \
+        "----------------------------------------------------" \
+        "Exiting! ${normal}"
         exit 1
     fi
 
     ## Snapshot validation
-	printf "%s\n" \
-	"Snapshot Validation" \
-	"----------------------------------------------------" \
+    printf "%s\n" \
+    "Snapshot Validation" \
+    "----------------------------------------------------" \
 
     ### Get snapshot name
     snapshotName="$initials-$diskName-$purpose-$(date +"%Y%m%d")"
@@ -118,39 +118,39 @@ function createStandard(){
 
     ### Did command execute successfully?
     if [[ $? != 0 ]]; then
-	    printf "%s\n" \
-	    "${red}ISSUE DETECTED - Gcloud command failed!" \
-	    "----------------------------------------------------" \
-	    "Exiting! ${normal}"
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Gcloud command failed!" \
+        "----------------------------------------------------" \
+        "Exiting! ${normal}"
         exit 1
     fi
 
     ### Is snapshot empty at 0 B?
     if [[ "$snapshotSize" == "'0'" ]]; then
-	    printf "%s\n" \
-	    "${red}ISSUE DETECTED - Snapshot size is 0 B!" \
-	    "----------------------------------------------------" \
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Snapshot size is 0 B!" \
+        "----------------------------------------------------" \
         "Do not proceed with current work effort! " \
         " " \
         "Review disk and take snapshot manually" \
         " " \
-	    "Exiting! ${normal}"
+        "Exiting! ${normal}"
         exit 1
     else
-	    printf "%s\n" \
-	    "${green}Snapshot size > 0 B" \
-	    "----------------------------------------------------" \
-	    "Proceed with work effort${normal}"
-    	exit 0
+        printf "%s\n" \
+        "${green}Snapshot size > 0 B" \
+        "----------------------------------------------------" \
+        "Proceed with work effort${normal}"
+        exit 0
     fi
 
 }
 
 # Function to create an archive snapshot
 function createArchive(){
-	printf "%s\n" \
-	"Archive Snapshot" \
-	"----------------------------------------------------"
+    printf "%s\n" \
+    "Archive Snapshot" \
+    "----------------------------------------------------"
 
     ## Store passed values
     server=$1
@@ -159,19 +159,19 @@ function createArchive(){
 
     ## Variable validation
     if [[ -z $server ]] || [[ -z $purpose ]] || [[ -z $project ]]; then
-    	printf "%s\n" \
-    	"${red}ISSUE DETECTED - Variable missing " \
-    	"----------------------------------------------------" \
-    	"Running help function and exiting." \
-    	"Re-run script with valid input${normal}"
-    	helpFunction
-	    exit 1
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Variable missing " \
+        "----------------------------------------------------" \
+        "Running help function and exiting." \
+        "Re-run script with valid input${normal}"
+        helpFunction
+        exit 1
     fi
 
     ## Confirmation
-	printf "%s\n" \
-	"${yellow}IMPORTANT: Value Confirmation" \
-	"----------------------------------------------------" \
+    printf "%s\n" \
+    "${yellow}IMPORTANT: Value Confirmation" \
+    "----------------------------------------------------" \
     "Snapshot Type:" \
     "Archive" \
     "" \
@@ -183,7 +183,7 @@ function createArchive(){
     "" \
     "Server should be powered off for best results!" \
     "" \
-	"If all clear, press enter to proceed or ctrl-c to cancel${normal}"
+    "If all clear, press enter to proceed or ctrl-c to cancel${normal}"
     read junkInput
 
     ## Create snapshot
@@ -199,22 +199,22 @@ function createArchive(){
 
     ### Was snapshot taken successfully?
     if [[ $? = 0 ]]; then
-	    printf "%s\n" \
-	    "${green}Snapshot taken " \
-	    "----------------------------------------------------" \
-	    "Moving to validation ${normal}"
+        printf "%s\n" \
+        "${green}Snapshot taken " \
+        "----------------------------------------------------" \
+        "Moving to validation ${normal}"
     else
-	    printf "%s\n" \
-	    "${red}ISSUE DETECTED - Something went wrong!" \
-	    "----------------------------------------------------" \
-	    "Exiting! ${normal}"
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Something went wrong!" \
+        "----------------------------------------------------" \
+        "Exiting! ${normal}"
         exit 1
     fi
 
     ## Snapshot validation
-	printf "%s\n" \
-	"Snapshot Validation" \
-	"----------------------------------------------------" \
+    printf "%s\n" \
+    "Snapshot Validation" \
+    "----------------------------------------------------" \
 
     ### Get snapshot name
     snapshotName="$diskName-$purpose-$(date +"%Y%m%d")"
@@ -224,66 +224,66 @@ function createArchive(){
 
     ### Did command execute successfully?
     if [[ $? != 0 ]]; then
-	    printf "%s\n" \
-	    "${red}ISSUE DETECTED - Gcloud command failed!" \
-	    "----------------------------------------------------" \
-	    "Exiting! ${normal}"
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Gcloud command failed!" \
+        "----------------------------------------------------" \
+        "Exiting! ${normal}"
         exit 1
     fi
 
     ### Is snapshot empty at 0 B?
     if [[ "$snapshotSize" == "'0'" ]]; then
-	    printf "%s\n" \
-	    "${red}ISSUE DETECTED - Snapshot size is 0 B!" \
-	    "----------------------------------------------------" \
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Snapshot size is 0 B!" \
+        "----------------------------------------------------" \
         "Do not proceed with current work effort! " \
-	    "Exiting! ${normal}"
+        "Exiting! ${normal}"
         exit 1
     else
-	    printf "%s\n" \
-	    "${green}Snapshot size > 0 B" \
-	    "----------------------------------------------------" \
-	    "Proceed with work effort${normal}"
-    	exit 0
+        printf "%s\n" \
+        "${green}Snapshot size > 0 B" \
+        "----------------------------------------------------" \
+        "Proceed with work effort${normal}"
+        exit 0
     fi
 
 }
 
 # Main, read passed flags
-	printf "%s\n" \
-	"Snapshot" \
-	"----------------------------------------------------" \
-	"Checking flags passed" \
-	"----------------------------------------------------"
+    printf "%s\n" \
+    "Snapshot" \
+    "----------------------------------------------------" \
+    "Checking flags passed" \
+    "----------------------------------------------------"
 
 # Check passed flags
 case "$1" in
 [Hh]elp)
-	printf "%s\n" \
-	"Running Help function" \
-	"----------------------------------------------------"
-	helpFunction
-	exit
-	;;
+    printf "%s\n" \
+    "Running Help function" \
+    "----------------------------------------------------"
+    helpFunction
+    exit
+    ;;
 [Ss]tandard)
-	printf "%s\n" \
-	"Standard snapshot flag passed" \
-	"----------------------------------------------------"
-	createStandard $2 $3 $4 $5
-	;;
+    printf "%s\n" \
+    "Standard snapshot flag passed" \
+    "----------------------------------------------------"
+    createStandard $2 $3 $4 $5
+    ;;
 [Aa]rchive)
-	printf "%s\n" \
-	"Archive snapshot flag passed" \
-	"----------------------------------------------------"
+    printf "%s\n" \
+    "Archive snapshot flag passed" \
+    "----------------------------------------------------"
     createArchive $2 $3 $4
-	;;
+    ;;
 *)
-	printf "%s\n" \
-	"${red}ISSUE DETECTED - Invalid input detected!" \
-	"----------------------------------------------------" \
-	"Running help function and exiting." \
-	"Re-run script with valid input${normal}"
-	helpFunction
-	exit 1
-	;;
+    printf "%s\n" \
+    "${red}ISSUE DETECTED - Invalid input detected!" \
+    "----------------------------------------------------" \
+    "Running help function and exiting." \
+    "Re-run script with valid input${normal}"
+    helpFunction
+    exit 1
+    ;;
 esac
