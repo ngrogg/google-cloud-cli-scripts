@@ -17,3 +17,6 @@ BASH scripts for listing servers matching criteria in GCP. Useful for upgrade pr
   Usage. `./phpList.sh PHP_VERSION` <br>
   Ex. `./phpList.sh 8.1` <br>
 * **ubuntuList**, A BASH script for listing Ubuntu servers in GCP.
+* **windowsList**, A BASH script for listing Windows servers in GCP. Two options: <br> 
+  - **display**, lists all Windows servers across all projects.
+  - **list**, lists servers in all projects following a license regex. Useful for OS upgrades.
