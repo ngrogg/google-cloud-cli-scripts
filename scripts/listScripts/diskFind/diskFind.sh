@@ -5,16 +5,16 @@
 # By Nicholas Grogg
 
 if [[ $1 == "help" || $1 == "Help" ]]; then
-        echo "Find disks across projects that match a criteria type"
-        echo "Usage. ./diskFind.sh DISK_TYPE"
-        echo "Ex. ./diskFind.sh pd-standard"
+    echo "Find disks across projects that match a criteria type"
+    echo "Usage. ./diskFind.sh DISK_TYPE"
+    echo "Ex. ./diskFind.sh pd-standard"
 fi
 
 if [[ -z $1 ]]; then
-        echo "Argument not provided, exiting!"
-        echo "Usage. ./diskFind.sh DISK_TYPE"
-        echo "Ex. ./diskFind.sh pd-standard"
-        exit 1
+    echo "Argument not provided, exiting!"
+    echo "Usage. ./diskFind.sh DISK_TYPE"
+    echo "Ex. ./diskFind.sh pd-standard"
+    exit 1
 fi
 
 # Assign provided diskType value to variable
@@ -25,11 +25,11 @@ projectArray=(`gcloud projects list | grep -E -v 'PROJECT_ID|^development|^test'
 
 # Create folders as needed if they don't exist
 if [[ ! -d interimFiles ]]; then
-        mkdir interimFiles
+    mkdir interimFiles
 fi
 
 if [[ ! -d outputFiles ]]; then
-        mkdir outputFiles
+    mkdir outputFiles
 fi
 
 # Create final output csv file for script
@@ -42,7 +42,7 @@ for project in "${projectArray[@]}"; do
 
     ## Append project to each line of csv file if csv file has any words at all in it
     if [[ $(wc -w interimFiles/${project}.csv | awk '{print $1}') -gt 0 ]]; then
-            sed -i "s/$/,${project}/" interimFiles/${project}.csv
+        sed -i "s/$/,${project}/" interimFiles/${project}.csv
     fi
 done
 
@@ -55,4 +55,3 @@ done
 
 # Back up master csv w/ timestamp
 cp diskFindOutput.csv outputFiles/diskFindOutput.$(date +%Y%m%d%H%M).csv
-

@@ -5,20 +5,20 @@
 # By Nicholas Grogg
 
 if [[ $1 == "Help" || $1 == "help" ]]; then
-        echo "Php List -- Help"
-	    echo "----------------------------------------------------"
-        echo "Usage. ./phpList.sh PHPVERSION"
-        echo "Ex. ./phpList.sh 8.1"
-        exit 0
+    echo "Php List -- Help"
+    echo "----------------------------------------------------"
+    echo "Usage. ./phpList.sh PHPVERSION"
+    echo "Ex. ./phpList.sh 8.1"
+    exit 0
 fi
 
 phpCheckVersion=$1
 
 if [[ -z $phpCheckVersion ]]; then
-        while [[ -z $phpCheckVersion ]]; do
-                echo "Enter a PHP version like 8.0 :"
-                read phpCheckVersion
-        done
+    while [[ -z $phpCheckVersion ]]; do
+        echo "Enter a PHP version like 8.0 :"
+        read phpCheckVersion
+    done
 fi
 
 # Array of projects, append project names/IDs to exclude as needed for your own uses
@@ -56,11 +56,11 @@ echo "Hostname,PHP Version" > phpVersion.csv
 # For loop to pick out servers running PHP
 for i in $(cat tertiaryFiles/serverList.txt)
 do
-                ## Check for PHP Version 8, update version as needed
-                phpFoundVersion=$(ssh $i "php --version | grep PHP\ $phpCheckVersion" | awk '{print $2}')
+    ## Check for PHP Version 8, update version as needed
+    phpFoundVersion=$(ssh $i "php --version | grep PHP\ $phpCheckVersion" | awk '{print $2}')
 
-                ## If PHP 8, append to PHP Version 8 spreadsheet. Update version as needed
-                if [[ "$phpFoundVersion" == *"$phpCheckVersion"* ]]; then
-                        echo "$i,$phpFoundVersion" >> phpVersion.csv
-                fi
+    ## If PHP 8, append to PHP Version 8 spreadsheet. Update version as needed
+    if [[ "$phpFoundVersion" == *"$phpCheckVersion"* ]]; then
+        echo "$i,$phpFoundVersion" >> phpVersion.csv
+    fi
 done
