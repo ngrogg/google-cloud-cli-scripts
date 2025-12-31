@@ -5,6 +5,13 @@ A collection of scripts for servers hosted in the Google Cloud Project. Named wi
 
 ## Scripts
 All scripts have a built in help function, just pass `help` as an argument. <br>
+* **cloudscp**, A BASH script for copying local files to a remote server. <br>
+  Takes an action, filepath, hostname, zone, and project as arguments. <br>
+  Optionally provide an SSH key filepath. <br>
+  Do not run as root or with root perms. <br>
+  May need adjusted depending on configuration. <br>
+  Usage, `./cloudscp copy /path/to/file hostname zone project (optional) /path/to/ssh/key`. <br>
+  Also has a built in 'help' function by passing help as an argument. <br>
 * **cloudssh**, A BASH script for connecting to GCP linux servers using the gcloud compute command.
   Takes a server, zone and project for arguments. <br>
   Usage, `cloudssh server zone project`<br>
