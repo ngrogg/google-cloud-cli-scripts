@@ -17,25 +17,25 @@ normal=$(tput sgr0)
 
 # Help function
 function helpFunction(){
-	printf "%s\n" \
-	"Help" \
-	"----------------------------------------------------" \
-	" " \
-	"help/Help" \
-	"* Display this help message and exit" \
-	" " \
-	"create/Create" \
-	"* Create Image from a GCP disk " \
-	"* Takes an image name, disk name, zone and project as arguments " \
-	"* Server should be powered off to create image" \
-	"Ex. ./createGcpImage.sh create IMAGE_NAME DISK_NAME ZONE PROJECT"
+    printf "%s\n" \
+    "Help" \
+    "----------------------------------------------------" \
+    " " \
+    "help/Help" \
+    "* Display this help message and exit" \
+    " " \
+    "create/Create" \
+    "* Create Image from a GCP disk " \
+    "* Takes an image name, disk name, zone and project as arguments " \
+    "* Server should be powered off to create image" \
+    "Ex. ./createGcpImage.sh create IMAGE_NAME DISK_NAME ZONE PROJECT"
 }
 
 # Function to run program
 function runProgram(){
-	printf "%s\n" \
-	"Create" \
-	"----------------------------------------------------"
+    printf "%s\n" \
+    "Create" \
+    "----------------------------------------------------"
 
     ## Validation
     ### Values to variables
@@ -45,9 +45,9 @@ function runProgram(){
     projectName=$4
 
     ### Does project exist?
-	printf "%s\n" \
+    printf "%s\n" \
     "Validation: Does project exist?" \
-	"----------------------------------------------------"
+    "----------------------------------------------------"
 
     ### If project exists
     if [[ $(gcloud projects list | grep $projectName) ]]; then
@@ -66,9 +66,9 @@ function runProgram(){
     fi
 
     ### Does disk exist in project?
-	printf "%s\n" \
+    printf "%s\n" \
     "Validation: Does disk exist in project?" \
-	"----------------------------------------------------"
+    "----------------------------------------------------"
 
     ### If disk exists
     if [[ $(gcloud compute disks list --project $projectName | grep $sourceDisk) ]]; then
@@ -112,35 +112,35 @@ function runProgram(){
 }
 
 # Main, read passed flags
-	printf "%s\n" \
-	"Create GCP Image" \
-	"----------------------------------------------------" \
-	" " \
-	"Checking flags passed" \
-	"----------------------------------------------------"
+    printf "%s\n" \
+    "Create GCP Image" \
+    "----------------------------------------------------" \
+    " " \
+    "Checking flags passed" \
+    "----------------------------------------------------"
 
 # Check passed flags
 case "$1" in
 [Hh]elp)
-	printf "%s\n" \
-	"Running Help function" \
-	"----------------------------------------------------"
-	helpFunction
-	exit
-	;;
+    printf "%s\n" \
+    "Running Help function" \
+    "----------------------------------------------------"
+    helpFunction
+    exit
+    ;;
 [Cc]reate)
-	printf "%s\n" \
-	"Running script" \
-	"----------------------------------------------------"
-	runProgram $2 $3 $4 $5
-	;;
+    printf "%s\n" \
+    "Running script" \
+    "----------------------------------------------------"
+    runProgram $2 $3 $4 $5
+    ;;
 *)
-	printf "%s\n" \
-	"${red}ISSUE DETECTED - Invalid input detected!" \
-	"----------------------------------------------------" \
-	"Running help script and exiting." \
-	"Re-run script with valid input${normal}"
-	helpFunction
-	exit
-	;;
+    printf "%s\n" \
+    "${red}ISSUE DETECTED - Invalid input detected!" \
+    "----------------------------------------------------" \
+    "Running help script and exiting." \
+    "Re-run script with valid input${normal}"
+    helpFunction
+    exit
+    ;;
 esac

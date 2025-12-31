@@ -7,28 +7,28 @@ project=$3
 
 # Help
 if [[ $1 == "help" || $1 == "Help" ]]; then
-        echo "cloudssh server zone project"
-        echo "optional, use an SSH key"
-        echo "cloudssh server zone project /path/to/sshkey"
-        exit
+    echo "cloudssh server zone project"
+    echo "optional, use an SSH key"
+    echo "cloudssh server zone project /path/to/sshkey"
+    exit
 fi
 
 # Checks
 if [[ -z $project ]]; then
-	gcloud projects list
-	echo -n "Please enter a PROJECT_ID to use: "
-	read project
+    gcloud projects list
+    echo -n "Please enter a PROJECT_ID to use: "
+    read project
 fi
 
 if [[ -z $zone ]]; then
-	gcloud compute zones list
-	echo -n "Please enter a zone to use: "
-	read zone
+    gcloud compute zones list
+    echo -n "Please enter a zone to use: "
+    read zone
 fi
 
 if [[ -z $server ]]; then
-	echo -n "Please enter a server to search for: "
-	read server
+    echo -n "Please enter a server to search for: "
+    read server
 fi
 
 # Run command

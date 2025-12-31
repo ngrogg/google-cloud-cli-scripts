@@ -250,11 +250,11 @@ function createArchive(){
 }
 
 # Main, read passed flags
-    printf "%s\n" \
-    "Snapshot" \
-    "----------------------------------------------------" \
-    "Checking flags passed" \
-    "----------------------------------------------------"
+printf "%s\n" \
+"Snapshot" \
+"----------------------------------------------------" \
+"Checking flags passed" \
+"----------------------------------------------------"
 
 # Check passed flags
 case "$1" in
