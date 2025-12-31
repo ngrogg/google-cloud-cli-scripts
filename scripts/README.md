@@ -8,6 +8,8 @@ All scripts have a built in help function, just pass `help` as an argument. <br>
 * **cloudssh**, A BASH script for connecting to GCP linux servers using the gcloud compute command.
   Takes a server, zone and project for arguments. <br>
   Usage, `cloudssh server zone project`<br>
+  Can also take an SSH key file as an argument. Use a private key. <br>
+  Usage, `cloudssh server zone project /path/to/sshkey`.<br>
 * **consolelog**, List output from the GCP Console Log for a server.
   Takes an action, hostname, zone and project as an argument. <br>
   Usage, `consolelog log hostname zone project` <br>
