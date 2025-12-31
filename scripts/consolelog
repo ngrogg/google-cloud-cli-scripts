@@ -6,24 +6,24 @@
 
 # Help function
 function helpFunction(){
-    printf '%s\n' \
-    'Help' \
-    '----------------------------------------------------' \
-    ' ' \
-    'help/Help' \
-    '* Display this help message and exit' \
-    ' ' \
-    'log/Log' \
-    '* Outputs Google Cloud Console logs for server ' \
-    '* Takes hostname zone and project as arguments ' \
-    'Ex. ./consolelog log hostname zone project'
+    printf "%s\n" \
+    "Help" \
+    "----------------------------------------------------" \
+    " " \
+    "help/Help" \
+    "* Display this help message and exit" \
+    " " \
+    "log/Log" \
+    "* Outputs Google Cloud Console logs for server " \
+    "* Takes hostname zone and project as arguments " \
+    "Ex. ./consolelog log hostname zone project"
 }
 
 # Function to run program
 function runProgram(){
-    printf '%s\n' \
-    'Console log' \
-    '----------------------------------------------------'
+    printf "%s\n" \
+    "Console log" \
+    "----------------------------------------------------"
 
     ## Assign passed flags to variables
     hostname=$1
@@ -32,26 +32,26 @@ function runProgram(){
 
     ## Validation
     if [[ -z $hostname ]]; then
-        printf '%s\n' \
-        'ISSUE DETECTED: Hostname value empty' \
-        '----------------------------------------------------' \
-        'Enter a hostname'
+        printf "%s\n" \
+        "ISSUE DETECTED: Hostname value empty" \
+        "----------------------------------------------------" \
+        "Enter a hostname"
         read hostname
     fi
 
     if [[ -z $zone ]]; then
-        printf '%s\n' \
-        'ISSUE DETECTED: Zone value empty' \
-        '----------------------------------------------------' \
-        'Enter a zone'
+        printf "%s\n" \
+        "ISSUE DETECTED: Zone value empty" \
+        "----------------------------------------------------" \
+        "Enter a zone"
         read zone
     fi
 
     if [[ -z $project ]]; then
-        printf '%s\n' \
-        'ISSUE DETECTED: Project value empty' \
-        '----------------------------------------------------' \
-        'Enter a project'
+        printf "%s\n" \
+        "ISSUE DETECTED: Project value empty" \
+        "----------------------------------------------------" \
+        "Enter a project"
         read project
     fi
 
@@ -60,34 +60,34 @@ function runProgram(){
 }
 
 # Main, read passed flags
-    printf '%s\n' \
-    'Console log' \
-    '----------------------------------------------------' \
-    ' ' \
-    'Checking flags passed' \
-    '----------------------------------------------------'
+    printf "%s\n" \
+    "Console log" \
+    "----------------------------------------------------" \
+    " " \
+    "Checking flags passed" \
+    "----------------------------------------------------"
 
 # Check passed flags
 case "$1" in
 [Hh]elp)
-    printf '%s\n' \
-    'Running Help function' \
-    '----------------------------------------------------'
+    printf "%s\n" \
+    "Running Help function" \
+    "----------------------------------------------------"
     helpFunction
     exit
     ;;
 [Ll]og)
-    printf '%s\n' \
-    'Running script' \
-    '----------------------------------------------------'
+    printf "%s\n" \
+    "Running script" \
+    "----------------------------------------------------"
     runProgram $2 $3 $4
     ;;
 *)
-    printf '%s\n' \
-    'ISSUE DETECTED - Invalid input detected!' \
-    '----------------------------------------------------' \
-    'Running help script and exiting.' \
-    'Re-run script with valid input'
+    printf "%s\n" \
+    "ISSUE DETECTED - Invalid input detected!" \
+    "----------------------------------------------------" \
+    "Running help script and exiting." \
+    "Re-run script with valid input"
     helpFunction
     exit
     ;;
