@@ -1,0 +1,9 @@
+Log of major revisions for prod scripts, newest -> oldest
+
+Script:
+Revision:
+Change:
+
+Script: scripts/cloudssh
+Revision: 20260119
+Change: Complete rework. Moved to functions. Added SSH key argument.
