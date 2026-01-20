@@ -11,3 +11,7 @@ Change: Complete rework. Moved to functions.
 Script: scripts/cloudssh
 Revision: 20260119
 Change: Complete rework. Moved to functions. Added SSH key argument.
+
+Script: scripts/projectlist
+Revision: 20250107
+Change: Complete rework. Moved to functions. Added ability to list multiple projects.
