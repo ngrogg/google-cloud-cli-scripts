@@ -40,7 +40,7 @@ function pods(){
     "Pods" \
     "----------------------------------------------------"
 
-    if [ -z $1 ]; then
+    if [[ -z $1 ]]; then
         kubectl get pods
     else
         kubectl get pods | grep $1
@@ -53,7 +53,7 @@ function ingress(){
     "Ingress" \
     "----------------------------------------------------"
 
-    if [ -z $1 ]; then
+    if [[ -z $1 ]]; then
         kubectl get ingress
     else
         kubectl get ingress | grep $1
@@ -65,7 +65,7 @@ function connect(){
     printf "%s\n" \
     "Connect" \
     "----------------------------------------------------"
-    if [ -z $1 ]; then
+    if [[ -z $1 ]]; then
         # Output pods
         kubectl get pods
 
@@ -91,26 +91,26 @@ function connect(){
 
 ## Check passed flags
 case "$1" in
-[Hh]elp)
+[[Hh]]elp)
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
     helpFunction
     exit
     ;;
-[Pp]ods)
+[[Pp]]ods)
     printf "%s\n" \
     "Listing pods" \
     "----------------------------------------------------"
     pods $2
     ;;
-[Ii]ngress)
+[[Ii]]ngress)
     printf "%s\n" \
     "Listing Ingress" \
     "----------------------------------------------------"
     ingress $2
     ;;
-[Cc]onnect)
+[[Cc]]onnect)
     printf "%s\n" \
     "Connecting to pod" \
     "----------------------------------------------------"

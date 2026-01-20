@@ -4,6 +4,10 @@ Script:
 Revision:
 Change:
 
+Script: scripts/kbConnect
+Revision: 20260119
+Change: Replaced single bracket if statements with double bracket statements.
+
 Script: scripts/gcpRestart
 Revision: 20260119
 Change: Complete rework. Moved to functions.
