@@ -60,12 +60,12 @@ function runProgram(){
 }
 
 # Main, read passed flags
-    printf "%s\n" \
-    "Console log" \
-    "----------------------------------------------------" \
-    " " \
-    "Checking flags passed" \
-    "----------------------------------------------------"
+printf "%s\n" \
+"Console log" \
+"----------------------------------------------------" \
+" " \
+"Checking flags passed" \
+"----------------------------------------------------"
 
 # Check passed flags
 case "$1" in
