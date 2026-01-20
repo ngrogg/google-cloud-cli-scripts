@@ -4,6 +4,10 @@ Script:
 Revision:
 Change:
 
+Script: scripts/gcpRestart
+Revision: 20260119
+Change: Complete rework. Moved to functions.
+
 Script: scripts/cloudssh
 Revision: 20260119
 Change: Complete rework. Moved to functions. Added SSH key argument.

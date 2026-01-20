@@ -1,75 +1,93 @@
 #!/usr/bin/bash
 
-# A GCP BASH script to stop/start a server.
-# Takes a hostname, project and zond as arguments
+# GCP Restart
+# BASH script to restart server with Google Cloud SDK
 # By Nicholas Grogg
+# Revision: 20260119
+
+# Color variables
+## Errors
+red=$(tput setaf 1)
+## Clear checks
+green=$(tput setaf 2)
+## User input required
+yellow=$(tput setaf 3)
+## Set text back to standard terminal font
+normal=$(tput sgr0)
+
 
 # Help function
 function helpFunction(){
-    echo "Help"
-    echo "-----------------------------------------------"
-    echo "gcpRestart server zone project"
-    exit
+    printf "%s\n" \
+    "Help" \
+    "----------------------------------------------------" \
+    " " \
+    "help/Help" \
+    "* Display this help message and exit" \
+    " " \
+    "restart/Restart" \
+    "* Restart a server" \
+    "* Takes a hostname, zone and project as arguments" \
+    "Usage. ./gcpRestart restart myServer us-west1-b myProject"
 }
 
 # Function to run program
 function runProgram(){
-    # Assign flags to values
-    server=$1
-    zone=$2
-    project=$3
+    printf "%s\n" \
+    "Restart" \
+    "----------------------------------------------------"
 
-    # Checks
-    # Check if server empty
-    if [ -z $server ]
-    then
-        read -p "What server is to be rebooted? : " server
+    ## Variables
+    serverName=$1
+    serverZone=$2
+    serverProject=$3
+
+    ## Validation
+    if [[ -z $serverName ]]; then
+        printf "%s\n" \
+        "${red}ISSUE DETECTED - Invalid input detected!" \
+        "----------------------------------------------------" \
+        "Running help script and exiting." \
+        "Re-run script with valid input${normal}"
+        helpFunction
+        exit 1
     fi
 
-    # Check if zone empty
-    if [ -z $zone ]
-    then
-        read -p "What zone is the server in? : " zone
-    fi
-
-    # Check if project empty
-    if [ -z $project ]
-    then
-        read -p "What project is the server in? : " project
-    fi
-
-    # Final check, bail if empty
-    if [[ -z $server || -z $zone || -z $project ]]; then
-        echo "One or more variables empty, run again!"
-        exit
-    fi
-
-    # Stop/Start servers
-    gcloud compute instances stop $server --zone $zone --project $project
-    gcloud compute instances start $server --zone $zone --project $project
+    ## Stop/start server
+    gcloud compute instances stop $serverName --zone $serverZone --project $serverProject
+    gcloud compute instances start $serverName --zone $serverZone --project $serverProject
 }
 
-# Main, parse passed values
-echo "GCP Restarter"
-echo "-----------------------------------------------"
-echo ""
-echo "Checking flags passed"
-echo "-----------------------------------------------"
-echo ""
+# Main, read passed flags
+printf "%s\n" \
+"GCP Restart" \
+"----------------------------------------------------" \
+" " \
+"Checking flags passed" \
+"----------------------------------------------------"
 
-## Check passed values
+# Check passed flags
 case "$1" in
 [Hh]elp)
-    echo "Running Help function"
-    echo "-----------------------------------------------"
-    echo ""
+    printf "%s\n" \
+    "Running Help function" \
+    "----------------------------------------------------"
     helpFunction
     exit
     ;;
+[Rr]estart)
+    printf "%s\n" \
+    "Running script" \
+    "----------------------------------------------------"
+    runProgram $2 $3 $4
+    ;;
 *)
-    echo "Running GCP Restarter"
-    echo "-----------------------------------------------"
-    echo ""
-    runProgram $1 $2 $3
+    printf "%s\n" \
+    "${red}ISSUE DETECTED - Invalid input detected!" \
+    "----------------------------------------------------" \
+    "Running help script and exiting." \
+    "Re-run script with valid input${normal}"
+    helpFunction
+    exit
     ;;
 esac
