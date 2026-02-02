@@ -5,6 +5,9 @@
 # Usage, just run the script
 # By Nicholas Grogg
 
+# Set exit on error
+set -e
+
 # Generate array of projects, fill in any projects to exclude
 projectArray=(`gcloud projects list | grep -E -v 'add|projects|here' | awk '{print $1}'`)
 

@@ -4,6 +4,9 @@
 # BASH script to find all instances of a disk type across projects
 # By Nicholas Grogg
 
+# Set exit on error
+set -e
+
 if [[ $1 == "help" || $1 == "Help" ]]; then
     echo "Find disks across projects that match a criteria type"
     echo "Usage. ./diskFind.sh DISK_TYPE"

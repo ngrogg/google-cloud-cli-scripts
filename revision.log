@@ -4,6 +4,34 @@ Script:
 Revision:
 Change:
 
+Script: scripts/generateHosts/generateHosts.sh
+Revision: 20260201
+Change: Added set -e flag
+
+Script: scripts/listScripts/centosList/centosList.sh
+Revision: 20260201
+Change: Added set -e flag
+
+Script: scripts/listScripts/databaseTechList/databaseTechList.sh
+Revision: 20260201
+Change: Added set -e flag
+
+Script: scripts/listScripts/diskFind/diskFind.sh
+Revision: 20260201
+Change: Added set -e flag
+
+Script: scripts/listScripts/phpList/phpList.sh
+Revision: 20260201
+Change: Added set -e flag
+
+Script: scripts/listScripts/ubuntuList/ubuntuList.sh
+Revision: 20260201
+Change: Added set -e flag
+
+Script: scripts/listScripts/windowsList/windowsList.sh
+Revision: 20260201
+Change: Added set -e flag
+
 Script: scripts/kbConnect
 Revision: 20260119
 Change: Replaced single bracket if statements with double bracket statements.

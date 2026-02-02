@@ -4,6 +4,9 @@
 # BASH script to find Linux servers and output their PHP versions
 # By Nicholas Grogg
 
+# Set exit on error
+set -e
+
 if [[ $1 == "Help" || $1 == "help" ]]; then
     echo "Php List -- Help"
     echo "----------------------------------------------------"
