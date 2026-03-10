@@ -4,6 +4,10 @@ Script:
 Revision:
 Change:
 
+Script: scripts/projectlist
+Revision: 20260309
+Change: Added partial match to project name
+
 Script: scripts/generateHosts/generateHosts.sh
 Revision: 20260201
 Change: Added set -e flag

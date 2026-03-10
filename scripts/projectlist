@@ -3,7 +3,7 @@
 # Project List
 # BASH script to list all servers in a project
 # By Nicholas Grogg
-# Revision: 20250107
+# Revision: 20260309
 
 # Color variables
 ## Errors
@@ -84,6 +84,9 @@ function runProgram(){
         done
     ## Else multiMatch false just list project
     else
+        ### Extra check for partial matches
+        projectName=$(gcloud projects list | grep $projectName | awk '{print $1}' | head -n 1)
+
         printf "%s\n" \
         "Project: " "$projectName"
 
