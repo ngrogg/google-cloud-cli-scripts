@@ -1,8 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # PHP List
 # BASH script to find Linux servers and output their PHP versions
 # By Nicholas Grogg
+# Revision: 20260422
 
 # Set exit on error
 set -e

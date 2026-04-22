@@ -1,8 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Windows List
 # BASH script for listing Windows servers in GCP
 # By Nicholas Grogg
+# Revision: 20260422
 
 # Set exit on error
 set -e

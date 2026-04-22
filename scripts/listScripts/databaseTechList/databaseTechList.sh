@@ -1,8 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Database Tech List
 # BASH script to find Linux servers running Database tech and version
 # By Nicholas Grogg
+# Revision: 20260422
 
 # Set exit on error
 set -e

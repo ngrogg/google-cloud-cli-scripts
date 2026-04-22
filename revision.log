@@ -1,8 +1,8 @@
 Log of major revisions for prod scripts, newest -> oldest
 
-Script:
-Revision:
-Change:
+Script: */.sh
+Revision: 20260422
+Change: Replaced /usr/bin/bash with /usr/bin/env bash
 
 Script: scripts/projectlist
 Revision: 20260309

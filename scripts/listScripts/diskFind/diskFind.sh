@@ -1,8 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Disk Find
 # BASH script to find all instances of a disk type across projects
 # By Nicholas Grogg
+# Revision: 20260422
 
 # Set exit on error
 set -e

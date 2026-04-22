@@ -1,9 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Generate Hosts
 # BASH script to generate a potential host file
-# Usage, just run the script
 # By Nicholas Grogg
+# Revision: 20260422
 
 # Set exit on error
 set -e

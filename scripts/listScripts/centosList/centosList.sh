@@ -1,8 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # CentOS List
 # BASH script for listing CentOS servers in GCP
 # By Nicholas Grogg
+# Revision: 20260422
 
 # Set exit on error
 set -e

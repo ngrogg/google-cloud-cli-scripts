@@ -1,8 +1,9 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Ubuntu List
 # BASH script for listing Ubuntu servers in GCP
 # By Nicholas Grogg
+# Revision: 20260422
 
 # Set exit on error
 set -e
