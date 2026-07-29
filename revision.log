@@ -1,5 +1,13 @@
 Log of major revisions for prod scripts, newest -> oldest
 
+Script:
+Revision:
+Change:
+
+Script: scripts/snapshot
+Revision: 20260727
+Change: Reworked script to use helper functions
+
 Script: */.sh
 Revision: 20260422
 Change: Replaced /usr/bin/bash with /usr/bin/env bash
