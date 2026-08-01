@@ -4,6 +4,10 @@ Script:
 Revision:
 Change:
 
+Script: scripts/updateGCPServiceAccounts
+Revision: 20260728
+Change: Added new script.
+
 Script: scripts/snapshot
 Revision: 20260727
 Change: Reworked script to use helper functions

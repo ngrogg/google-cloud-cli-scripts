@@ -67,3 +67,5 @@ argument. Useful in cases where a disk has an unusual name, such as from a snaps
   Example using my initials, `./snapshotRemoval remove ngg` <br>
   Works best from a cron, i.e, <br>
   `5 16 * * 5 /bin/bash ~/bin/snapshotRemoval remove ngg > /dev/null 2>&1` <br>
+* **updateGcpServiceAccounts.sh**, BASH script to attach a Service Account to a server. Takes hostname, project and zone from an input file. <br>
+  Usage, `./updateGcpServiceAccounts.sh run /path/to/inputFile.txt`
