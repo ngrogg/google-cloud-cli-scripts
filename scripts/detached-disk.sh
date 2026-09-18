@@ -1,8 +1,12 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Detached Disk
 # BASH script to iterate through projects and list all disks that aren't attached to anything
 # By Nicholas Grogg
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Color variables
 ## Errors
@@ -16,7 +20,7 @@ normal=$(tput sgr0)
 
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -29,11 +33,11 @@ function helpFunction(){
     "* Lists disks that aren't attached to anything " \
     "* Just past the list argument " \
     " " \
-    "Ex. ./detachedDisk.sh list"
+    "Ex. ./detached_disk.sh list"
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "List" \
     "----------------------------------------------------"
@@ -44,10 +48,10 @@ function runProgram(){
     " "
 
     ## Array of projects, append project names/IDs to exclude as needed for your own uses
-    projectArray=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
+    project_array=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
 
     ## For loop to iterate through projects and output disks
-    for project in "${projectArray[@]}"
+    for project in "${project_array[@]}"
     do
         printf "%s\n" \
         "Project: " "$project" \
@@ -83,14 +87,14 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Ll]ist)
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    runProgram
+    run_program
     ;;
 *)
     printf "%s\n" \
@@ -98,7 +102,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input${normal}"
-    helpFunction
+    help_function
     exit
     ;;
 esac

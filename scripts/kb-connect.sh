@@ -1,11 +1,15 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-# kbConnect
+# KB Connect
 # This script is designed to interact with Kubectl containers using gcloud tools
 # By Nicholas Grogg
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 ## Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -16,22 +20,22 @@ function helpFunction(){
     "pods/Pods" \
     "* List all pods" \
     "* Can filter out a specific pod" \
-    "Ex. ./kbConnect pods" \
-    "Ex. ./kbConnect pods alias " \
+    "Ex. ./kb-connect.sh pods" \
+    "Ex. ./kb-connect.sh pods alias " \
     " " \
     "ingress/Ingress" \
     "* List pod domains and public IPs" \
     "* Can filter out a specific pod" \
-    "Ex. ./kbConnect ingress" \
-    "Ex. ./kbConnect ingress alias" \
+    "Ex. ./kb-connect.sh ingress" \
+    "Ex. ./kb-connect.sh ingress alias" \
     " " \
     "connect/Connect" \
     "* Connect to pod" \
     "* Lists all pods before for easy copying" \
     "* Can provide a pod name to connect directly" \
     "* Can match on partials" \
-    "Ex. ./kbConnect connect" \
-    "Ex. ./kbConnect connect pod"
+    "Ex. ./kb-connect.sh connect" \
+    "Ex. ./kb-connect.sh connect pod"
 }
 
 ## Function to list all pods
@@ -83,7 +87,7 @@ function connect(){
 
 ## Main, read passed flags
     printf "%s\n" \
-    "kbConnect" \
+    "kb-connect.sh" \
     "----------------------------------------------------" \
     " " \
     "Checking flags passed" \
@@ -95,7 +99,7 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [[Pp]]ods)
@@ -122,7 +126,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input"
-    helpFunction
+    help_function
     exit
     ;;
 esac

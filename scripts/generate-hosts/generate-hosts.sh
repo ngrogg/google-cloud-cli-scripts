@@ -3,19 +3,19 @@
 # Generate Hosts
 # BASH script to generate a potential host file
 # By Nicholas Grogg
-# Revision: 20260422
+# Revision: 20260918
 
 # Set exit on error
 set -e
 
 # Generate array of projects, fill in any projects to exclude
-projectArray=(`gcloud projects list | grep -E -v 'add|projects|here' | awk '{print $1}'`)
+project_array=(`gcloud projects list | grep -E -v 'add|projects|here' | awk '{print $1}'`)
 
 # Generate output file, truncate if already existing
-echo "# GCP Hosts" > generateHostsOutput.txt
+echo "# GCP Hosts" > generate_hosts_output.txt
 
 # Iterate through list and append output to file above
-for project in "${projectArray[@]}"
+for project in "${project_array[@]}"
 do
     ## List project, parse out IP and hostname
     gcloud compute instances list --project $project | awk '{
@@ -27,10 +27,10 @@ do
                 break
             }
         }
-    }' >> generateHostsOutput.txt
+    }' >> generate_hosts_output.txt
 done
 
 # Append section for site testing
-echo " " >> generateHostsOutput.txt
-echo "# Site Testing" >> generateHostsOutput.txt
-echo " " >> generateHostsOutput.txt
+echo " " >> generate_hosts_output.txt
+echo "# Site Testing" >> generate_hosts_output.txt
+echo " " >> generate_hosts_output.txt

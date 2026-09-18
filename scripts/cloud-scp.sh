@@ -1,9 +1,12 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # CloudSCP
 # BASH script for moving local files to GCP server via Gcloud Compute
 # By Nicholas Grogg
-# Revision: 20251230
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Color variables
 ## Errors
@@ -17,7 +20,7 @@ normal=$(tput sgr0)
 
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -34,22 +37,22 @@ function helpFunction(){
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "Copy" \
     "----------------------------------------------------"
 
     ## Variables
     ### What to copy
-    copyPath=$1
+    copy_path=$1
     ### Server hostname to copy to
-    serverHost=$2
+    server_host=$2
     ### Zone of server in GCP
-    serverZone=$3
+    server_zone=$3
     ### Project of server in GCP
-    serverProject=$4
+    server_project=$4
     ### Optional path to SSH key
-    sshKeyPath=$5
+    ssh_key_path=$5
     ### Username running script (may need adjusted if local/remote usernames don't match)
     username=$(whoami)
 
@@ -63,18 +66,18 @@ function runProgram(){
         " " \
         "Running help function and exiting"
 
-        helpFunction
+        help_function
 
         exit 1
     fi
 
     ## Copy
     ### If no SSH Key filepath provided
-    if [[ -z $sshKeyPath ]]; then
-        gcloud compute scp $copyPath $serverHost:/home/$username --zone $serverZone --project $serverProject --tunnel-through-iap
+    if [[ -z $ssh_key_path ]]; then
+        gcloud compute scp $copy_path $server_host:/home/$username --zone $server_zone --project $server_project --tunnel-through-iap
     ### Else use SSH key
     else
-        gcloud compute scp $copyPath $serverHost:/home/$username --zone $serverZone --project $serverProject --ssh-key-file $sshKeyPath --tunnel-through-iap
+        gcloud compute scp $copy_path $server_host:/home/$username --zone $server_zone --project $server_project --ssh-key-file $ssh_key_path --tunnel-through-iap
     fi
 }
 
@@ -92,14 +95,14 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Cc]opy)
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    runProgram $2 $3 $4 $5 $6
+    run_program $2 $3 $4 $5 $6
     ;;
 *)
     printf "%s\n" \
@@ -107,7 +110,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input${normal}"
-    helpFunction
+    help_function
     exit
     ;;
 esac

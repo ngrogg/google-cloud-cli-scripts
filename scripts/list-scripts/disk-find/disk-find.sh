@@ -3,7 +3,7 @@
 # Disk Find
 # BASH script to find all instances of a disk type across projects
 # By Nicholas Grogg
-# Revision: 20260422
+# Revision: 20260918
 
 # Set exit on error
 set -e
@@ -25,7 +25,7 @@ fi
 diskType=$1
 
 # Generate array of projects, adjust regex as needed
-projectArray=(`gcloud projects list | grep -E -v 'PROJECT_ID|^development|^test' | awk '{print $1}'`)
+project_array=(`gcloud projects list | grep -E -v 'PROJECT_ID|^development|^test' | awk '{print $1}'`)
 
 # Create folders as needed if they don't exist
 if [[ ! -d interimFiles ]]; then
@@ -40,7 +40,7 @@ fi
 echo "name,size,project" > diskFindOutput.csv
 
 # Iterate through array of projects looking for disks that match the provided disk type
-for project in "${projectArray[@]}"; do
+for project in "${project_array[@]}"; do
     ## Append disks to csv, remove first line of output
     gcloud compute disks list --project="${project}" --filter="type:$diskType" --format='csv(name,sizeGb)' | tail -n +2 > interimFiles/${project}.csv
 

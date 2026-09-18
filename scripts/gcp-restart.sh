@@ -1,9 +1,12 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # GCP Restart
 # BASH script to restart server with Google Cloud SDK
 # By Nicholas Grogg
-# Revision: 20260119
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Color variables
 ## Errors
@@ -17,7 +20,7 @@ normal=$(tput sgr0)
 
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -28,34 +31,34 @@ function helpFunction(){
     "restart/Restart" \
     "* Restart a server" \
     "* Takes a hostname, zone and project as arguments" \
-    "Usage. ./gcpRestart restart myServer us-west1-b myProject"
+    "Usage. ./gcp-restart.sh restart my_server us-west1-b my_project"
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "Restart" \
     "----------------------------------------------------"
 
     ## Variables
-    serverName=$1
-    serverZone=$2
-    serverProject=$3
+    server_name=$1
+    server_zone=$2
+    server_project=$3
 
     ## Validation
-    if [[ -z $serverName ]]; then
+    if [[ -z $server_name ]]; then
         printf "%s\n" \
         "${red}ISSUE DETECTED - Invalid input detected!" \
         "----------------------------------------------------" \
         "Running help script and exiting." \
         "Re-run script with valid input${normal}"
-        helpFunction
+        help_function
         exit 1
     fi
 
     ## Stop/start server
-    gcloud compute instances stop $serverName --zone $serverZone --project $serverProject
-    gcloud compute instances start $serverName --zone $serverZone --project $serverProject
+    gcloud compute instances stop $server_name --zone $server_zone --project $server_project
+    gcloud compute instances start $server_name --zone $server_zone --project $server_project
 }
 
 # Main, read passed flags
@@ -72,14 +75,14 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Rr]estart)
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    runProgram $2 $3 $4
+    run_program $2 $3 $4
     ;;
 *)
     printf "%s\n" \
@@ -87,7 +90,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input${normal}"
-    helpFunction
+    help_function
     exit
     ;;
 esac

@@ -4,6 +4,10 @@ Script:
 Revision:
 Change:
 
+Script: *.sh
+Revision: 20260918
+Change: Major refactor. Renamed scripts, variables, functions to line up closer with best practices.
+
 Script: scripts/updateGCPServiceAccounts
 Revision: 20260728
 Change: Added new script.

@@ -1,9 +1,12 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Snapshot
 # BASH script for creating standard and archive snapshots using the Google Cloud SDK
 # By Nicholas Grogg
-# Revision: 20260727
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Color variables
 ## Errors
@@ -17,7 +20,7 @@ normal=$(tput sgr0)
 
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -29,18 +32,18 @@ function helpFunction(){
     "* Creates a standard snapshot" \
     "* Takes a hostname, purpose, intials and project as arguments" \
     "Usage, snapshot hostname purpose initials project" \
-    "Ex. snapshot standard serverName wp ngg myProject" \
+    "Ex. snapshot.sh standard server_name wp ngg my_project" \
     " " \
     "archive/Archive" \
     "Creates an archive snapshot" \
     "Takes a hostname, purpose, and project as arguments" \
     "Usage, snapshots hostname purpose project" \
-    "Ex. snapshot archive serverName storage myProject" \
+    "Ex. snapshot.sh archive server_name storage my_project" \
     " "
 }
 
 # Helper Function to fetch instance zone and disk name
-getServerInfo() {
+function get_server_info() {
     printf "%s\n" \
     "Getting server zone and disk name" \
     "----------------------------------------------------"
@@ -50,7 +53,7 @@ getServerInfo() {
     local project="$2"
 
     ## Find server zone and disk
-    serverZone=$(gcloud compute instances list --project="$project" \
+    server_zone=$(gcloud compute instances list --project="$project" \
         --filter="name=$server" \
         --format="value(zone.basename())" | head -n 1)
 
@@ -59,7 +62,7 @@ getServerInfo() {
         --format="value(name)" | head -n 1)
 
     ## If values are null exit with error
-    if [[ -z "$serverZone" || -z "$diskName" ]]; then
+    if [[ -z "$server_zone" || -z "$diskName" ]]; then
         printf "%s\n" \
         "${red}ISSUE DETECTED - Could not find server or disk!" \
         "----------------------------------------------------" \
@@ -69,18 +72,18 @@ getServerInfo() {
 }
 
 # Helper function to validate snapshots
-validateSnapshot() {
+function validate_snapshot() {
     printf "%s\n" \
     "Snapshot Validation" \
     "----------------------------------------------------"
 
     ## Local variables for passed values
-    local snapshotName="$1"
+    local snapshot_name="$1"
     local project="$2"
-    local snapshotSize
+    local snapshot_size
 
     ## Find snapshot size
-    snapshot_size=$(gcloud compute snapshots describe "$snapshotName" \
+    snapshot_size=$(gcloud compute snapshots describe "$snapshot_name" \
         --project="$project" \
         --format="value(storageBytes)" 2>/dev/null)
 
@@ -117,7 +120,7 @@ validateSnapshot() {
 }
 
 # Function to create a standard snapshot
-function createStandard(){
+function create_standard(){
     printf "%s\n" \
     "Standard Snapshot" \
     "----------------------------------------------------"
@@ -135,12 +138,12 @@ function createStandard(){
         "----------------------------------------------------" \
         "Running help function and exiting." \
         "Re-run script with valid input${normal}"
-        helpFunction
+        help_function
         exit 1
     fi
 
     ## Retrieve zone & disk before asking for confirmation
-    getServerInfo "$server" "$project"
+    get_server_info "$server" "$project"
 
     ## Confirmation
     printf "%s\n" \
@@ -154,17 +157,17 @@ function createStandard(){
     " " \
     "If all clear, press enter to proceed or ctrl-c to cancel${normal}"
 
-    read junkInput
+    read junk_input
 
     ## Create snapshot
     ### Set snapshot name
-    local snapshotName="${initials}-${diskName}-${purpose}-$(date +"%Y%m%d")"
+    local snapshot_name="${initials}-${diskName}-${purpose}-$(date +"%Y%m%d")"
 
     ### Take snapshot
     gcloud compute disks snapshot "$diskName" \
-        --snapshot-names="$snapshotName" \
+        --snapshot-names="$snapshot_name" \
         --storage-location="us" \
-        --zone="$serverZone" \
+        --zone="$server_zone" \
         --project="$project"
 
     ### Was snapshot taken successfully?
@@ -174,7 +177,7 @@ function createStandard(){
         "----------------------------------------------------" \
         "Proceeding to validation ${normal}"
 
-        validateSnapshot "$snapshotName" "$project"
+        validate_snapshot "$snapshot_name" "$project"
     else
         printf "%s\n" \
         "${red}ISSUE DETECTED - Something went wrong!" \
@@ -185,7 +188,7 @@ function createStandard(){
 }
 
 # Function to create an archive snapshot
-function createArchive(){
+function create_archive(){
     printf "%s\n" \
     "Archive Snapshot" \
     "----------------------------------------------------"
@@ -203,12 +206,12 @@ function createArchive(){
         "----------------------------------------------------" \
         "Running help function and exiting." \
         "Re-run script with valid input${normal}"
-        helpFunction
+        help_function
         exit 1
     fi
 
     ## Retrieve zone & disk info
-    getServerInfo "$server" "$project"
+    get_server_info "$server" "$project"
 
     ## Confirmation
     printf "%s\n" \
@@ -223,10 +226,10 @@ function createArchive(){
     "Server needs to be powered off!" \
     "" \
     "If all clear, press enter to proceed or ctrl-c to cancel${normal}"
-    read junkInput
+    read junk_input
 
     ## Is the server powered off?
-    status=$(gcloud compute instances describe "$server" --project="$project" --zone="$serverZone" --format="value(status)" 2>/dev/null)
+    status=$(gcloud compute instances describe "$server" --project="$project" --zone="$server_zone" --format="value(status)" 2>/dev/null)
 
     if [[ "$status" != "TERMINATED" ]]; then
         printf "%s\n" \
@@ -246,13 +249,13 @@ function createArchive(){
     fi
 
     ### Variable name for snapshot
-    local snapshotName="${shortname}-${diskName}-${purpose}-$(date +"%Y%m%d")"
+    local snapshot_name="${shortname}-${diskName}-${purpose}-$(date +"%Y%m%d")"
 
     ### Take snapshot
-    gcloud compute snapshots create "$snapshotName" \
+    gcloud compute snapshots create "$snapshot_name" \
         --source-disk="$diskName" \
         --storage-location="us" \
-        --source-disk-zone="$serverZone" \
+        --source-disk-zone="$server_zone" \
         --project="$project" \
         --snapshot-type="ARCHIVE" \
         --labels="auth-to-delete=no,customer=$shortname"
@@ -264,7 +267,7 @@ function createArchive(){
         "----------------------------------------------------" \
         "Moving to validation ${normal}"
 
-        validateSnapshot "$snapshotName" "$project"
+        validate_snapshot "$snapshot_name" "$project"
 
     else
         printf "%s\n" \
@@ -288,20 +291,20 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Ss]tandard)
     printf "%s\n" \
     "Standard snapshot flag passed" \
     "----------------------------------------------------"
-    createStandard $2 $3 $4 $5
+    create_standard $2 $3 $4 $5
     ;;
 [Aa]rchive)
     printf "%s\n" \
     "Archive snapshot flag passed" \
     "----------------------------------------------------"
-    createArchive $2 $3 $4 $5
+    create_archive $2 $3 $4 $5
     ;;
 *)
     printf "%s\n" \
@@ -309,7 +312,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help function and exiting." \
     "Re-run script with valid input${normal}"
-    helpFunction
+    help_function
     exit 1
     ;;
 esac

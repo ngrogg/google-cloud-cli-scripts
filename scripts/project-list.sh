@@ -1,9 +1,12 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Project List
 # BASH script to list all servers in a project
 # By Nicholas Grogg
-# Revision: 20260309
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Color variables
 ## Errors
@@ -17,7 +20,7 @@ normal=$(tput sgr0)
 
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -29,27 +32,27 @@ function helpFunction(){
     "* List the servers in a project" \
     "* A server can also be passed with the project name" \
     "* If multiple projects match name, they will all be searched" \
-    "Usage. ./projectlist list project hostname " \
-    "Ex. ./projectlist list myProject webServer1"
+    "Usage. ./project-list.sh list project hostname " \
+    "Ex. ./project-list.sh list my_project webServer1"
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "List" \
     "----------------------------------------------------"
 
     ## Variables
     ### Name of project to search
-    projectName=$1
+    project_name=$1
     ### Name of server to search for, can be blank
-    serverName=$2
+    server_name=$2
     ### Are there multiple matches? False by default.
-    multiMatch=0
+    multi_match=0
 
     ## Validation
     ### If no value passed
-    if [[ -z $projectName ]]; then
+    if [[ -z $project_name ]]; then
         printf "%s\n" \
         "${red}ISSUE DETECTED - Invalid input detected!" \
         "----------------------------------------------------" \
@@ -60,42 +63,42 @@ function runProgram(){
     fi
 
     ## If more than one project matches on a partial project name
-    if [[ $(gcloud projects list | grep $projectName | awk '{print $1}' | wc -l) -gt 1 ]]; then
-        ### Set multiMatch variable to true
-        multiMatch=1
+    if [[ $(gcloud projects list | grep $project_name | awk '{print $1}' | wc -l) -gt 1 ]]; then
+        ### Set multi_match variable to true
+        multi_match=1
         ### Populate array with project matches
-        projectArray=($(gcloud projects list | grep $projectName | awk '{print $1}'))
+        project_array=($(gcloud projects list | grep $project_name | awk '{print $1}'))
     fi
 
-    ## If multiMatch true, list all servers in matching projects
-    if [[ $multiMatch -eq 1 ]]; then
-        for projectIt in "${projectArray[@]}"
+    ## If multi_match true, list all servers in matching projects
+    if [[ $multi_match -eq 1 ]]; then
+        for projectIt in "${project_array[@]}"
         do
             printf "%s\n" \
             "Project: " "$projectIt"
 
-            ### if serverName variable null, just list project
-            if [[ -z $serverName ]]; then
+            ### if server_name variable null, just list project
+            if [[ -z $server_name ]]; then
                 gcloud compute instances list --project $projectIt
-            ### Else grep for serverName
+            ### Else grep for server_name
             else
-                gcloud compute instances list --project $projectIt | grep $serverName
+                gcloud compute instances list --project $projectIt | grep $server_name
             fi
         done
-    ## Else multiMatch false just list project
+    ## Else multi_match false just list project
     else
         ### Extra check for partial matches
-        projectName=$(gcloud projects list | grep $projectName | awk '{print $1}' | head -n 1)
+        project_name=$(gcloud projects list | grep $project_name | awk '{print $1}' | head -n 1)
 
         printf "%s\n" \
-        "Project: " "$projectName"
+        "Project: " "$project_name"
 
-        ### if serverName variable null, just list project
-        if [[ -z $serverName ]]; then
-            gcloud compute instances list --project $projectName
-        ### Else grep for serverName
+        ### if server_name variable null, just list project
+        if [[ -z $server_name ]]; then
+            gcloud compute instances list --project $project_name
+        ### Else grep for server_name
         else
-            gcloud compute instances list --project $projectName | grep $serverName
+            gcloud compute instances list --project $project_name | grep $server_name
         fi
     fi
 }
@@ -114,14 +117,14 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Ll]ist)
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    runProgram $2 $3
+    run_program $2 $3
     ;;
 *)
     printf "%s\n" \
@@ -129,7 +132,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input${normal}"
-    helpFunction
+    help_function
     exit
     ;;
 esac

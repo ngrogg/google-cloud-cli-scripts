@@ -3,7 +3,7 @@
 # Update GCP Service Accounts
 # Updates GCP service accounts for instances in an input file
 # By Nicholas Grogg
-# Revision: 20260728
+# Revision: 20260918
 
 # Set exit on error
 set -e
@@ -23,7 +23,7 @@ yellow=$(tput setaf 3)
 normal=$(tput sgr0)
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -33,19 +33,19 @@ function helpFunction(){
     " " \
     "run/Run" \
     "* Updates GCP service account for instances in an input file " \
-    "* Usage: ./updateGcpServiceAccounts.sh run /path/to/inputFile.txt" \
+    "* Usage: ./update-gcp-service-accounts.sh run /path/to/inputFile.txt" \
     " "
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     local input_file="$1"
 
     if [[ -z "$input_file" ]]; then
         printf "%s\n"
         "----------------------------------------------------" \
         "${red}Error: Missing input file argument.${normal}"
-        helpFunction
+        help_function
         exit 1
     fi
 
@@ -72,7 +72,7 @@ function runProgram(){
     "If all clear, press enter to proceed or ctrl-c to cancel${normal}" \
     " "
 
-    read junkInput
+    read junk_input
 
     printf "%s\n" \
     "Run" \
@@ -172,7 +172,7 @@ if [[ $# -eq 0 ]]; then
     "----------------------------------------------------" \
     "Running help script and exiting." \
     " "
-    helpFunction
+    help_function
     exit 1
 fi
 
@@ -183,7 +183,7 @@ case "$1" in
     "----------------------------------------------------" \
     " "
 
-    helpFunction
+    help_function
     exit 0
     ;;
 [Rr]un)
@@ -192,7 +192,7 @@ case "$1" in
     "----------------------------------------------------" \
     " "
 
-    runProgram "$2"
+    run_program "$2"
     ;;
 *)
     printf "%s\n" \
@@ -202,7 +202,7 @@ case "$1" in
     "Re-run script with valid input${normal}" \
     " "
 
-    helpFunction
+    help_function
     exit 1
     ;;
 esac

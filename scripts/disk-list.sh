@@ -1,11 +1,15 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Disk List
 # Script to list disks in a project and associated snapshot policies
 # By Nicholas Grogg
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -16,11 +20,11 @@ function helpFunction(){
     "list/List" \
     "* List disks in project and associated snapshot policies" \
     "* Takes a project as an argument" \
-    "Ex. ./diskList list project"
+    "Ex. ./disk_list list project"
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "Running Disk List" \
     "----------------------------------------------------"
@@ -82,14 +86,14 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Ll]ist)
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    runProgram $2 $3
+    run_program $2 $3
     ;;
 *)
     printf "%s\n" \
@@ -97,7 +101,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input"
-    helpFunction
+    help_function
     exit
     ;;
 esac

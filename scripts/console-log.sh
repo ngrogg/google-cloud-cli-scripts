@@ -1,11 +1,15 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Console log
 # Output Google Cloud Console log output
 # By Nicholas Grogg
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -16,11 +20,11 @@ function helpFunction(){
     "log/Log" \
     "* Outputs Google Cloud Console logs for server " \
     "* Takes hostname zone and project as arguments " \
-    "Ex. ./consolelog log hostname zone project"
+    "Ex. ./console-log.sh log hostname zone project"
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "Console log" \
     "----------------------------------------------------"
@@ -73,14 +77,14 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Ll]og)
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    runProgram $2 $3 $4
+    run_program $2 $3 $4
     ;;
 *)
     printf "%s\n" \
@@ -88,7 +92,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input"
-    helpFunction
+    help_function
     exit
     ;;
 esac

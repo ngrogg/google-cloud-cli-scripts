@@ -3,7 +3,7 @@
 # PHP List
 # BASH script to find Linux servers and output their PHP versions
 # By Nicholas Grogg
-# Revision: 20260422
+# Revision: 20260918
 
 # Set exit on error
 set -e
@@ -26,7 +26,7 @@ if [[ -z $phpCheckVersion ]]; then
 fi
 
 # Array of projects, append project names/IDs to exclude as needed for your own uses
-projectArray=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
+project_array=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
 
 # Truncate server list
 echo "" > tertiaryFiles/serverList.txt
@@ -37,7 +37,7 @@ echo "" > tertiaryFiles/windowsList.txt
 echo "" > tertiaryFiles/windowsListSorted.txt
 
 # For loop to iterate through projects and populate output file with  servers
-for project in "${projectArray[@]}"
+for project in "${project_array[@]}"
 do
     ## Find Windows servers specifically, you may need to adjust this based on your own needs.
     gcloud compute instances list --project="${project}" --format="table(name,zone,disks[].licenses)" | grep -i windows | awk '{print $1}' >> tertiaryFiles/windowsList.txt

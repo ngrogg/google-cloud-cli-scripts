@@ -1,9 +1,12 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Cloud SSH
 # BASH script for connecting to Linux servers via Google Cloud SDK
 # By Nicholas Grogg
-# Revision: 20260119
+# Revision: 20260918
+
+# Set exit on error
+set -e
 
 # Color variables
 ## Errors
@@ -17,7 +20,7 @@ normal=$(tput sgr0)
 
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -28,40 +31,40 @@ function helpFunction(){
     "connect/Connect" \
     "* Connect to server" \
     "* Takes a hostname, zone, and project as arguments" \
-    "Usage. ./cloudssh connect myServer us-west1-a myProject" \
+    "Usage. ./cloudssh connect my_server us-west1-a my_project" \
     " " \
     "* Script also takes SSH keys as an optional argument " \
-    "Usage. ./cloudssh connect myServer us-west1-a myProject ~/.ssh/id_ed25519"
+    "Usage. ./cloudssh connect my_server us-west1-a my_project ~/.ssh/id_ed25519"
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "Connect" \
     "----------------------------------------------------"
 
     ## Variables
-    serverName=$1
-    serverZone=$2
-    serverProject=$3
-    sshKeyFilepath=$4
+    server_name=$1
+    server_zone=$2
+    server_project=$3
+    ssh_key_filepath=$4
 
     ## Validation
-    if [[ -z $serverName ]]; then
+    if [[ -z $server_name ]]; then
         printf "%s\n" \
         "${red}ISSUE DETECTED - Invalid input detected!" \
         "----------------------------------------------------" \
         "Running help script and exiting." \
         "Re-run script with valid input${normal}"
-        helpFunction
+        help_function
         exit 1
     fi
 
-    # If no SSH sshKeyFilepath provided
-    if [[ -z $sshKeyFilepath ]]; then
-        gcloud compute ssh $serverName --zone $serverZone --project $serverProject --tunnel-through-iap
+    # If no SSH ssh_key_filepath provided
+    if [[ -z $ssh_key_filepath ]]; then
+        gcloud compute ssh $server_name --zone $server_zone --project $server_project --tunnel-through-iap
     else
-        gcloud compute ssh $serverName --zone $serverZone --project $serverProject --ssh-key-file $sshKeyFilepath --tunnel-through-iap
+        gcloud compute ssh $server_name --zone $server_zone --project $server_project --ssh-key-file $ssh_key_filepath --tunnel-through-iap
     fi
 }
 
@@ -79,14 +82,14 @@ case "$1" in
     printf "%s\n" \
     "Running Help function" \
     "----------------------------------------------------"
-    helpFunction
+    help_function
     exit
     ;;
 [Cc]onnect)
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    runProgram $2 $3 $4 $5
+    run_program $2 $3 $4 $5
     ;;
 *)
     printf "%s\n" \
@@ -94,7 +97,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input${normal}"
-    helpFunction
+    help_function
     exit
     ;;
 esac

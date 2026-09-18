@@ -3,7 +3,7 @@
 # Database Tech List
 # BASH script to find Linux servers running Database tech and version
 # By Nicholas Grogg
-# Revision: 20260422
+# Revision: 20260918
 
 # Set exit on error
 set -e
@@ -20,7 +20,7 @@ normal=$(tput sgr0)
 
 
 # Help function
-function helpFunction(){
+function help_function(){
     printf "%s\n" \
     "Help" \
     "----------------------------------------------------" \
@@ -30,23 +30,23 @@ function helpFunction(){
     " " \
     "populate/Populate " \
     "* Populate files used by list function " \
-    "Usage. ./databaseTechList.sh populate " \
+    "Usage. ./database-tech-list.sh populate " \
     " " \
     "list/List" \
     "* Create CSV file of database tech and versions" \
     "* Takes database tech and version as arguments " \
     "* Mysql, MariaDB, Postgres or Psql acceptable" \
-    "Ex. ./databaseTechList.sh list MariaDB 10.6"
+    "Ex. ./database-tech-list.sh list MariaDB 10.6"
 }
 
 # Function to populate teriary files
-function populateLists(){
+function populate_lists(){
     ## Truncate output files
-    echo "" > tertiaryFiles/allList.txt
-    echo "" > tertiaryFiles/allListSorted.txt
-    echo "" > tertiaryFiles/serverList.txt
-    echo "" > tertiaryFiles/windowsList.txt
-    echo "" > tertiaryFiles/windowsListSorted.txt
+    echo "" > tertiary_files/all_list.txt
+    echo "" > tertiary_files/all_list_sorted.txt
+    echo "" > tertiary_files/serverList.txt
+    echo "" > tertiary_files/windowsList.txt
+    echo "" > tertiary_files/windowsListSorted.txt
 
     printf "%s\n" \
     "Getting list of projects "\
@@ -54,7 +54,7 @@ function populateLists(){
     " "
 
     ## Array of projects, append project names/IDs to exclude as needed for your own uses
-    projectArray=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
+    project_array=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
 
 
     printf "%s\n" \
@@ -63,35 +63,35 @@ function populateLists(){
     " "
 
     ## For loop to iterate through projects and populate output file with  servers
-    for project in "${projectArray[@]}"
+    for project in "${project_array[@]}"
     do
         ### Find Windows servers specifically, you may need to adjust this based on your own needs.
-        gcloud compute instances list --project="${project}" --format="table(name,zone,disks[].licenses)" | grep -i windows | awk '{print $1}' >> tertiaryFiles/windowsList.txt
+        gcloud compute instances list --project="${project}" --format="table(name,zone,disks[].licenses)" | grep -i windows | awk '{print $1}' >> tertiary_files/windowsList.txt
 
         ### Find powered on servers. Write hostnames to server list file. You may need to adjust this based on your own needs.
-        gcloud compute instances list --project="${project}" | grep -E -v 'TERMINATED' | awk '{print $1}' >> tertiaryFiles/allList.txt
+        gcloud compute instances list --project="${project}" | grep -E -v 'TERMINATED' | awk '{print $1}' >> tertiary_files/all_list.txt
 
     done
 
     ## Sort files
-    sort tertiaryFiles/windowsList.txt -o tertiaryFiles/windowsListSorted.txt
-    sort tertiaryFiles/allList.txt -o tertiaryFiles/allListSorted.txt
+    sort tertiary_files/windowsList.txt -o tertiary_files/windowsListSorted.txt
+    sort tertiary_files/all_list.txt -o tertiary_files/all_list_sorted.txt
 
-    ## Pick out items unique to allListSorted.txt and write to serverList, should filter out Windows
-    comm -13 tertiaryFiles/windowsListSorted.txt tertiaryFiles/allListSorted.txt >> tertiaryFiles/serverList.txt
+    ## Pick out items unique to all_list_sorted.txt and write to serverList, should filter out Windows
+    comm -13 tertiary_files/windowsListSorted.txt tertiary_files/all_list_sorted.txt >> tertiary_files/serverList.txt
 
 }
 
 # Function to run program
-function runProgram(){
+function run_program(){
     printf "%s\n" \
     "List" \
     "----------------------------------------------------" \
     " "
 
     ## Variables
-    databaseTech=$1
-    techVersion=$2
+    database_tech=$1
+    tech_version=$2
 
     ## Validation
     ### Case Statement based on database tech
@@ -100,24 +100,24 @@ function runProgram(){
     "----------------------------------------------------" \
     " "
 
-    case "$databaseTech" in
+    case "$database_tech" in
         ### Postgres
         [Pp][Ss][Qq][Ll]|[Pp][Oo][Ss][Tt][Gg][Rr][Ee][Ss])
             # Truncate output files
-            echo "Hostname,Psql Version" > databaseTechVersion.csv
-            techShortname="psql"
+            echo "Hostname,Psql Version" > database_tech_version.csv
+            tech_shortname="psql"
             ;;
         ### MySQL
         [Mm][Yy][Ss][Qq][Ll])
             # Truncate output files
-            echo "Hostname,MySQL Version" > databaseTechVersion.csv
-            techShortname="mysql"
+            echo "Hostname,MySQL Version" > database_tech_version.csv
+            tech_shortname="mysql"
             ;;
         ### MariaDB
         [Mm][Aa][Rr][Ii][Aa][Dd][Bb])
             # Truncate output files
-            echo "Hostname,MariaDB Version" > databaseTechVersion.csv
-            techShortname="mariadb"
+            echo "Hostname,MariaDB Version" > database_tech_version.csv
+            tech_shortname="mariadb"
             ;;
         ### Fail state
         *)
@@ -126,26 +126,26 @@ function runProgram(){
             "----------------------------------------------------" \
             "Running help script and exiting." \
             "Re-run script with valid input${normal}"
-            helpFunction
+            help_function
             exit 1
             ;;
     esac
 
-    ### Check if techVersion empty
+    ### Check if tech_version empty
     printf "%s\n" \
     "Checking database version passed "\
     "----------------------------------------------------" \
     " "
 
-    if [[ -z $techVersion ]]; then
-        while [[ -z $techVersion ]]; do
+    if [[ -z $tech_version ]]; then
+        while [[ -z $tech_version ]]; do
             printf "%s\n" \
             "${yellow}IMPORTANT: Enter a value for Database version" \
             "----------------------------------------------------" \
             "Example Versions: '10', '8.1' ${normal}" \
             " "
 
-            read techVersion
+            read tech_version
         done
     fi
 
@@ -155,33 +155,33 @@ function runProgram(){
     " "
 
     ## For loop to pick out servers running passed value version of MariaDB
-    for i in $(cat tertiaryFiles/serverList.txt)
+    for i in $(cat tertiary_files/serverList.txt)
     do
         ## Get database tech version
-        if [[ "$techShortname" == "psql" ]]; then
-            databaseTechVersion=$(ssh $i "$techShortname -V" | awk '{print $3}')
-        elif [[ "$techShortname" == "mysql" ]]; then
-            databaseTechVersion=$(ssh $i "$techShortname -V" | awk '{print $3}')
-        elif [[ "$techShortname" == "mariadb" ]]; then
-            databaseTechVersion=$(ssh $i "$techShortname -V" | awk '{print $5}' | rev | cut -c2- | rev)
+        if [[ "$tech_shortname" == "psql" ]]; then
+            database_tech_version=$(ssh $i "$tech_shortname -V" | awk '{print $3}')
+        elif [[ "$tech_shortname" == "mysql" ]]; then
+            database_tech_version=$(ssh $i "$tech_shortname -V" | awk '{print $3}')
+        elif [[ "$tech_shortname" == "mariadb" ]]; then
+            database_tech_version=$(ssh $i "$tech_shortname -V" | awk '{print $5}' | rev | cut -c2- | rev)
         else
             printf "%s\n" \
             "${red}ISSUE DETECTED - Invalid input detected!" \
             "----------------------------------------------------" \
             "Running help script and exiting." \
             "Re-run script with valid input${normal}"
-            helpFunction
+            help_function
             exit
         fi
 
-        ## If databaseTechVersion version matches, append to databaseTechVersion spreadsheet
-        if [[ "$databaseTechVersion" == "$techVersion"* ]]; then
-            echo "$i,$databaseTechVersion" >> databaseTechVersion.csv
+        ## If database_tech_version version matches, append to database_tech_version spreadsheet
+        if [[ "$database_tech_version" == "$tech_version"* ]]; then
+            echo "$i,$database_tech_version" >> database_tech_version.csv
         fi
     done
 
     ## Keep copy of CSV file
-    cp databaseTechVersion.csv outputFiles/databaseTechVersion.csv.$(date +%Y%m%d%H%M)
+    cp database_tech_version.csv outputFiles/database_tech_version.csv.$(date +%Y%m%d%H%M)
 }
 
 # Main, read passed flags
@@ -201,7 +201,7 @@ case "$1" in
     "----------------------------------------------------" \
     " "
 
-    helpFunction
+    help_function
     exit
     ;;
 [Ll]ist)
@@ -210,7 +210,7 @@ case "$1" in
     "----------------------------------------------------" \
     " "
 
-    runProgram $2 $3
+    run_program $2 $3
     ;;
 [Pp]opulate)
     printf "%s\n" \
@@ -218,7 +218,7 @@ case "$1" in
     "----------------------------------------------------" \
     " "
 
-    populateLists
+    populate_lists
     ;;
 *)
     printf "%s\n" \
@@ -226,7 +226,7 @@ case "$1" in
     "----------------------------------------------------" \
     "Running help script and exiting." \
     "Re-run script with valid input${normal}"
-    helpFunction
+    help_function
     exit
     ;;
 esac
