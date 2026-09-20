@@ -18,7 +18,6 @@ yellow=$(tput setaf 3)
 ## Set text back to standard terminal font
 normal=$(tput sgr0)
 
-
 # Help function
 function help_function(){
     printf "%s\n" \
@@ -33,7 +32,7 @@ function help_function(){
     "* A server can also be passed with the project name" \
     "* If multiple projects match name, they will all be searched" \
     "Usage. ./project-list.sh list project hostname " \
-    "Ex. ./project-list.sh list my_project webServer1"
+    "Ex. ./project-list.sh list my_project web-server"
 }
 
 # Function to run program
@@ -72,17 +71,17 @@ function run_program(){
 
     ## If multi_match true, list all servers in matching projects
     if [[ $multi_match -eq 1 ]]; then
-        for projectIt in "${project_array[@]}"
+        for project_name in "${project_array[@]}"
         do
             printf "%s\n" \
-            "Project: " "$projectIt"
+            "Project: " "$project_name"
 
             ### if server_name variable null, just list project
             if [[ -z $server_name ]]; then
-                gcloud compute instances list --project $projectIt
+                gcloud compute instances list --project $project_name
             ### Else grep for server_name
             else
-                gcloud compute instances list --project $projectIt | grep $server_name
+                gcloud compute instances list --project $project_name | grep $server_name
             fi
         done
     ## Else multi_match false just list project

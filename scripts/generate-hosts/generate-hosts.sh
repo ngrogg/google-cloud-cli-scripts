@@ -8,7 +8,7 @@
 # Set exit on error
 set -e
 
-# Generate array of projects, fill in any projects to exclude
+# Generate array of projects, TODO: fill in any projects to exclude
 project_array=(`gcloud projects list | grep -E -v 'add|projects|here' | awk '{print $1}'`)
 
 # Generate output file, truncate if already existing

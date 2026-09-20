@@ -18,7 +18,6 @@ yellow=$(tput setaf 3)
 ## Set text back to standard terminal font
 normal=$(tput sgr0)
 
-
 # Help function
 function help_function(){
     printf "%s\n" \
@@ -57,12 +56,12 @@ function get_server_info() {
         --filter="name=$server" \
         --format="value(zone.basename())" | head -n 1)
 
-    diskName=$(gcloud compute disks list --project="$project" \
+    disk_name=$(gcloud compute disks list --project="$project" \
         --filter="name~$server" \
         --format="value(name)" | head -n 1)
 
     ## If values are null exit with error
-    if [[ -z "$server_zone" || -z "$diskName" ]]; then
+    if [[ -z "$server_zone" || -z "$disk_name" ]]; then
         printf "%s\n" \
         "${red}ISSUE DETECTED - Could not find server or disk!" \
         "----------------------------------------------------" \
@@ -161,10 +160,10 @@ function create_standard(){
 
     ## Create snapshot
     ### Set snapshot name
-    local snapshot_name="${initials}-${diskName}-${purpose}-$(date +"%Y%m%d")"
+    local snapshot_name="${initials}-${disk_name}-${purpose}-$(date +"%Y%m%d")"
 
     ### Take snapshot
-    gcloud compute disks snapshot "$diskName" \
+    gcloud compute disks snapshot "$disk_name" \
         --snapshot-names="$snapshot_name" \
         --storage-location="us" \
         --zone="$server_zone" \
@@ -249,11 +248,11 @@ function create_archive(){
     fi
 
     ### Variable name for snapshot
-    local snapshot_name="${shortname}-${diskName}-${purpose}-$(date +"%Y%m%d")"
+    local snapshot_name="${shortname}-${disk_name}-${purpose}-$(date +"%Y%m%d")"
 
     ### Take snapshot
     gcloud compute snapshots create "$snapshot_name" \
-        --source-disk="$diskName" \
+        --source-disk="$disk_name" \
         --storage-location="us" \
         --source-disk-zone="$server_zone" \
         --project="$project" \

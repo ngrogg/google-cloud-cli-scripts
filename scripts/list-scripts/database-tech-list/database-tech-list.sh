@@ -18,7 +18,6 @@ yellow=$(tput setaf 3)
 ## Set text back to standard terminal font
 normal=$(tput sgr0)
 
-
 # Help function
 function help_function(){
     printf "%s\n" \

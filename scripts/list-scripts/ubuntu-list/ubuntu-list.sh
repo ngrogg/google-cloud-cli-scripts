@@ -27,7 +27,7 @@ function help_function(){
     "* Ubuntu List " \
     "* List Ubuntu servers in GCP " \
     "* No arguments, just run the script " \
-    "Ex. ./ubuntuList.sh list"
+    "Ex. ./ubuntu-list.sh list"
 }
 
 # Function to run program
@@ -40,14 +40,14 @@ function run_program(){
     project_array=(`gcloud projects list | grep -E -v 'test|PROJECT|temp' | awk '{print $1}'`)
 
     ## Create/truncate csv file
-    echo "Hostname,IP" > ubuntuList.csv
+    echo "Hostname,IP" > ubuntu-list.csv
 
     ## Iterate through projects
     for project in "${project_array[@]}"
     do
 
         ### List disks with Ubuntu property, you may need to adjust the grep -E filter for your own needs
-        gcloud compute instances list --project="${project}" --format="table(name,networkInterfaces[].networkIP,disks[].licenses)" --filter="disks[].licenses:(ubuntu)" | grep -E "ubuntu-16|ubuntu-18|ubuntu-20" | grep -v "balanced" | awk '{print $1 "," $2}' >> ubuntuList.csv
+        gcloud compute instances list --project="${project}" --format="table(name,networkInterfaces[].networkIP,disks[].licenses)" --filter="disks[].licenses:(ubuntu)" | grep -E "ubuntu-16|ubuntu-18|ubuntu-20" | grep -v "balanced" | awk '{print $1 "," $2}' >> ubuntu-list.csv
     done
 
 }

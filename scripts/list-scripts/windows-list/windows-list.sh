@@ -37,7 +37,7 @@ function help_function(){
 }
 
 # Function to display all Windows servers across all projects
-function displayServers(){
+function display_servers(){
     printf "%s\n" \
     "Display" \
     "----------------------------------------------------"
@@ -64,7 +64,7 @@ function run_program(){
     project_array=(`gcloud projects list | grep -E -v 'PROJECT_ID|^sys-[0123456789]|test|temp' | awk '{print $1}'`)
 
     ## Create/truncate csv file
-    echo "Hostname,IP" > windows_list.csv
+    echo "Hostname,IP" > windows-list.csv
 
     ## Iterate through projects
     for project in "${project_array[@]}"; do
@@ -72,16 +72,16 @@ function run_program(){
         ### List disks with Windows property, filter out newer 2019, 2022 disks
         ### Google doesn't update license for in-place upgrades and lists server as running old OS despite being upgraded
         ### Append to csv file
-        gcloud compute instances list --project="${project}" --format="table(name,networkInterfaces[].networkIP,disks[].licenses)" --filter="disks[].licenses:(windows)" | grep -E "2012|2016" | grep -v -E "balanced|2019|2022|2025" | awk '{print $1 "," $2}' >> windows_list.csv
+        gcloud compute instances list --project="${project}" --format="table(name,networkInterfaces[].networkIP,disks[].licenses)" --filter="disks[].licenses:(windows)" | grep -E "2012|2016" | grep -v -E "balanced|2019|2022|2025" | awk '{print $1 "," $2}' >> windows-list.csv
     done
 
     ## Edit csv file to remove quotes and brackets
-    sed -i 's/\[//g' windows_list.csv
-    sed -i 's/\]//g' windows_list.csv
-    sed -i "s/'//g" windows_list.csv
+    sed -i 's/\[//g' windows-list.csv
+    sed -i 's/\]//g' windows-list.csv
+    sed -i "s/'//g" windows-list.csv
 
-    ## Back up windows_list.csv
-    cp windows_list.csv outputFiles/windows_list_$(date +%Y%m%d%H%M).csv
+    ## Back up windows-list.csv
+    cp windows-list.csv outputFiles/windows-list-$(date +%Y%m%d%H%M).csv
 }
 
 # Main, read passed flags
@@ -111,7 +111,7 @@ case "$1" in
     printf "%s\n" \
     "Running script" \
     "----------------------------------------------------"
-    displayServers
+    display_servers
     ;;
 *)
     printf "%s\n" \
